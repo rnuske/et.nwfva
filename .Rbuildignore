@@ -3,3 +3,4 @@
 ^data-raw$
 ^README\.Rmd$
 ^vignettes/Funktionalisiertes\.Rmd$
+^\.github$

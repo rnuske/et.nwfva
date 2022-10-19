@@ -1,0 +1,150 @@
+---
+title: "Funktionalisiertes"
+author: Kai Staupendahl
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Funktionalisiertes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(et.nwfva)
+```
+
+**Note:** Sammlung von Inhalten die besser in einer Vignette aufgehoben sind, weil für Hilfeseite vielleicht zu ausführlich. 
+
+\@Kai gerne nach eigenem Gutdünken umsortieren umschreiben. Deine original Hilfeseiten sind unverändert in der Datei `R/funktionalisiertes.R`. Von dort kannst Du vermutlich einfach große Teile rüberholen.
+
+
+## Erste Überschrift
+
+
+## Verwendete Tafeln
+Die Methode `"funktional"` basiert auf einem nichtlinearen Modell, das an die
+bonitäts- und altersabhängigen Spitzen-/Mittelhöhen der folgenden, in der Sammlung von
+Schober (1995) enthaltenen Ertragstafeln angepasst wurde und somit deren
+Bonitätsfächer abbildet (s.a. [et_tafel]):
+
+- Eiche (Qercus robur L. und Quercus petraea (MATT.) LIEBL.), Jüttner 1955, *starke* Durchforstung. Als Näherung für die in dieser ET nicht angegebene Spitzenhöhe wurde die Weise'sche Oberhöhe verwendet; es wird unterstellt, dass dieser Höhenfächer auch in der Jüttner'schen Eichen-ET für *mäßige* Df., die primär nur Mittelhöhen enthält, zutreffende Werte für die Spitzenhöhe liefert.
+- Buche (Fagus sylvatica L.), Schober 1967, *mäßige* Df.
+- Fichte (Picea abies (L.) H. KARST.), Wiedemann 1936/42, *mäßige* Df.
+- Douglasie (Pseudotsuga menziesii (MIRBEL) FRANCO), Bergel 1985, *mittl.* Ertragsniveau, *mäßige* Df.
+- Kiefer (Pinus sylvestris L.), Wiedemann 1943, *mäßige* Df.
+
+
+## Modellansatz und Hossfeld Funktion
+
+Die funktionalisierte Funktion (`"funktional"`) basiert auf nichtlinearen
+Modellen, die die Spitzen- und Mittelhöhen-Bonitätsfächer der Baumarten
+Buche, Fichte, Douglasie und Kiefer aus der Sammlung von Schober (1995)
+abbilden (Details in der entsprechenden Vignette).
+Da diese Modelle die Höhenwerte der Ertragstafeln nicht exakt reproduzieren,
+sondern eine geglättete Version der dort wiedergegebenen
+Alter-Höhen-Beziehungen darstellen, entsprechen die mit der Methode `"funktional"`
+ermittelten Bonitäten nicht genau den Resultaten der `"klassisch"` ermittelten.
+Diese nutzt die originalen ET-Werte und inter- und extrapoliert linear für in
+den ET nicht enthaltene Alter und Bonitäten. Da die Höhenentwicklung über dem
+Alter jedoch nichtlinear verläuft, kommt es hier umso eher zu fehlerhaften
+Bonitierungen, je weiter der Altersrahmen der ET verlassen wird. Dasselbe gilt
+sinngemäß für die Bonitäten, wobei im Bereich junger Alter durch die dort
+starke Steigung der Höhenwachstumskurven in Kombination mit deren zeitlich
+versetztem Start außerdem deutliche Sprünge in der Höhenwachstumskurve
+extrapolierter Ertragsklassen auftreten können. Entsprechend instabil sind die
+darauf basierenden Bonitäten. Der Vorteil der Bonitierung auf Basis
+modellbasierter Bonitätsfächer liegt somit v.a. in der robusten und biologisch
+plausiblen Bonitierung auch in den Extrapolationsbereichen des Alters- und
+Bonitätsrahmens der Ertragstafeln.
+
+Standardmäßig wurden die Modelle auf Basis der algebraischen Differenzenform
+der Wachstumsfunktion von Sloboda (1971) formuliert, mit Ausnahme der Kiefer,
+für die die algebraische Differenzenform der Chapman-Richards-Funktion
+(Richards 1959) am besten geeignet war. Alternativ wurde für alle Baumarten
+außer Eiche ein auf der algebraischen Differenzenform der Hossfeld
+IV-Funktion (Hossfeld 1822) basierendes Modell angepasst, das mit 
+`hoss = TRUE` ausgewählt werden kann. Es unterscheidet sich vom Sloboda-Modell v.a.
+durch einen tlw. etwas geringeren Höhenzuwachs im Extrapolationsbereich
+oberhalb des Maximalalters der Ertragstafeln und eine beschleunigte
+Höhenentwicklung im unteren (extrapolierten) Altersbereich. Das Sloboda-Modell
+zeigt hier zwar eine bessere Anpassung an die Ertragstafelwerte, dafür aber im
+sehr jungen Alter (< 15 Jahre) oft ein unplausibel langes Verharren der
+Höhenwerte bei annähernd 0 m. Für die Beschreibung der Höhenentwicklung (sehr)
+junger Bestände scheint es also nur sehr bedingt geeignet zu sein.
+
+Ihr entscheidender Vorteil liegt darin, 1.) innerhalb des
+Bonitäts- und Altersrahmens der Ertragstafeln Mittelhöhen für beliebige
+Bonitäten und Alter auszugeben, ohne dass interpoliert werden muss, und 2.)
+robuste und biologisch plausible Werte auch im unteren und oberen
+Extrapolationsbereich der Bonitäten und Alter bereitzustellen.
+
+Der Vorteil der Bonitierung auf Basis
+modellbasierter Bonitätsfächer liegt somit v.a. in der robusten und biologisch
+plausiblen Bonitierung auch in den Extrapolationsbereichen des Alters- und
+Bonitätsrahmens der Ertragstafeln.
+
+## Hübsche Bestandeshöhenfächer
+
+```{r Mittelhoehenkurven, fig.width=6, fig.height=5}
+# Mittelhoehen-Bonitaetsfaecher der Douglasie (Sloboda-Modell) plotten:
+df <- expand.grid(art = "dgl", alter = seq(0, 120, by = 1), ekl = 0:4, stringsAsFactors=FALSE)
+df$hg <- et_hoehe(df$art, df$alter, df$ekl, bon_typ="relativ", hoehe_typ="mittel", methode="funktional")
+matplot(type = "l", unique(df$alter), matrix(df$hg, ncol = 5),
+ main = "Bonit\u00e4tsf\u00e4cher Douglasie 
+(Bergel 1985, mittl. Ertragsniveau, m\u00e4\u00DFige Df.)",
+ xlab = "Alter [a]", ylab = "Hg [m]", lty = 1, lwd = 2, col = "purple")
+# Originale ET-Werte einzeichnen:
+df <- expand.grid(art = "dgl", alter = seq(20, 100, by = 5), ekl = 1:3, stringsAsFactors=FALSE)
+points(t(mapply(et_tafel, df$art, df$alter, df$ekl)[c("Alter", "Hg"),]), cex = 1.2, lwd = 2)
+legend("bottomright", inset = 0.03, bty = "n",
+ legend = c("ET-Werte", "Modell"),
+ col = c("black", "purple"), pch = c(1, NA), lwd = 2, lty = c(NA, 1))
+```
+
+
+```{r Spitzenhoehenkurven, fig.width=6, fig.height=5}
+
+# Spitzenhoehen-Bonitaetsfaecher der Douglasie (Sloboda-Modell) plotten:
+df <- expand.grid(art = "dgl", alter = seq(0, 120, by = 1), ekl = 0:4, stringsAsFactors=FALSE)
+df$h100 <- et_hoehe(df$art, df$alter, df$ekl, bon_typ="relativ", hoehe_typ="ober", methode="funktional")
+matplot(type = "l", unique(df$alter), matrix(df$h100, ncol = 5),
+ main = "Bonit\u00e4tsf\u00e4cher Douglasie
+  (Bergel 1985, mittl. Ertragsniveau, m\u00e4\u00DFige Df.)",
+ xlab = "Alter [a]", ylab = "H100 [m]", lty = 1, lwd = 2, col = "purple")
+# Spitzenhoehen-Bonitaetsfaecher (Hossfeld-Modell) einzeichnen:
+df$h100.hoss <- et_hoehe(df$art, df$alter, df$ekl, hoss = TRUE, bon_typ="relativ", hoehe_typ="ober", methode="funktional")
+matlines(unique(df$alter), matrix(df$h100.hoss, ncol = 5), lty = 2, lwd = 2, col = "purple")
+# Originale ET-Werte einzeichnen:
+df <- expand.grid(art = "dgl", alter = seq(20, 100, by = 5), ekl = 1:3, stringsAsFactors=FALSE)
+points(t(mapply(et_tafel, df$art, df$alter, df$ekl)[c("Alter", "H100"),]), cex = 1.2, lwd = 2)
+legend("bottomright", inset = 0.03, bty = "n",
+ legend = c("ET-Werte", "Sloboda-Modell", "Hossfeld-Modell"),
+ col = c("black", "purple", "purple"), pch = c(1, NA, NA), lwd = 2, lty = c(NA, 1, 2))
+
+```
+
+
+
+## Referenzen
+Albert M., Nagel J., Schmidt M., Nagel R.-V., Spellmann H. (2021): Eine neue
+  Generation von Ertragstafeln für Eiche, Buche, Fichte, Douglasie und Kiefer
+  [Datensatz]. Version 1.0. Zenodo. https://doi.org/10.5281/zenodo.6343906
+  
+Hossfeld J.W. (1822): Mathematik für Forstmänner, Ökonomen und Cameralisten. 
+  Bd. 4, Gotha
+
+Richards F.J. (1959): A flexible growth function for empirical use.
+  Journal of Experimental Botany (10) 2: 290-301.
+
+Schober R. (1995): Ertragstafeln wichtiger Baumarten. 4. Aufl., 
+  J. D. Sauerländer’s Verlag, Frankfurt a.M., 166 S.
+
+Sloboda B. (1971): Darstellung von Wachstumsprozessen mit Hilfe von 
+  Differentialgleichungen erster Ordnung. Mitt. d. Baden-Württembergischen 
+  Forstl. Versuchs- und Forschungsanstalt, Heft 32, Freiburg, 109 S.

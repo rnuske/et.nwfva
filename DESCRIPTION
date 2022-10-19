@@ -1,0 +1,34 @@
+Package: et.nwfva
+Title: Forest Yield Tables for Northwest Germany and their Application
+Version: 0.1.0
+Authors@R: c(
+  person("Robert", "Nuske", role=c("aut", "cre"), 
+         email="robert.nuske@nw-fva.de", 
+         comment=c(ORCID="0000-0001-9773-2061")),
+  person("Kai", "Staupendahl", role="aut",
+         comment=c(ORCID="0000-0001-6595-3601")),
+  person("Matthias", "Albert", role="aut",
+         comment=c(ORCID="0000-0003-0344-4806")),
+  person("Nordwestdeutsche Forstliche Versuchsanstalt (NW-FVA)", 
+         role=c("cph", "fnd")))
+Description: The new yield tables developed by the Northwest German Forest 
+  Research Institute (NW-FVA) provide a forest management tool for the five 
+  main commercial tree species oak, beech, spruce, Douglas-fir and pine for 
+  northwestern Germany. The new method applied for deriving yield tables 
+  combines measurements of growth and yield trials with growth simulations 
+  using a state-of-the-art single-tree growth simulator. By doing so, the new 
+  yield tables reflect the current increment level and the recommended 
+  graduated thinning from above is the underlying management concept. The yield
+  tables are provided along with methods for deriving the site index and for 
+  interpolating between age and site indices and extrapolating beyond age and 
+  site index ranges. The inter-/extrapolations are performed traditionally by 
+  the rule of proportion or with a functional approach.
+Depends: R (>= 3.5)
+Suggests: knitr, rmarkdown, tinytest
+License: GPL (>= 2)
+Encoding: UTF-8
+Language: de
+NeedsCompilation: no
+RoxygenNote: 7.2.1
+VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)

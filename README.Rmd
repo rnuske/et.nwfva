@@ -1,0 +1,144 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+
+# Optionen
+options(width=90) # Die Tafel braucht ein klein bisschen mehr als 80 Zeichen
+
+# knitr Optionen
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+
+# Plotfunktion für Höhenfächer
+plotte_bonfaecher <- function(art, hoehe_typ, max_alter=170, step_alter=5, ekls=NA){
+  
+  et <- et_tafel(art)
+  if(any(is.na(ekls)))
+    ekls <- sort(unique(et$Ekl))
+  
+  # Matrix mit Hg für alle Ekl für 5-150 Jahre
+  df <- expand.grid(alter=c(seq(0, 18, 2), seq(20, max_alter, step_alter)), ekl=ekls)
+  
+  df$h_klass <- suppressWarnings(suppressMessages( 
+    et_hoehe(art, df$alter, df$ekl, 
+             bon_typ="relativ", hoehe_typ, methode="klass")))
+  df$h_funk <- suppressWarnings(suppressMessages( 
+    et_hoehe(art, df$alter, df$ekl, 
+             bon_typ="relativ", hoehe_typ, methode="funk")))
+  max_h <- max(df$h_klass, df$h_funk, na.rm=TRUE)
+  
+  # plot
+  op <- par(mar=c(2.5,2.5,0.5,0.5), mgp=c(1.5,0.5,0), tcl=-0.3)
+  
+  plot(0,0, type="n", xlab="Alter (a)", ylab="Höhe (m)",
+       xlim=c(0, max_alter), ylim=c(0, max_h),
+       xaxt='n', yaxt='n')
+  
+  axis(side=1, at=seq(10, max_alter, 20), labels=FALSE, lwd=0, lwd.ticks=1, tcl=par('tcl')*2/3)
+  axis(side=1, at=seq(0, max_alter, 20), gap.axis=0.1, lwd=0, lwd.ticks=1)
+  axis(side=2, at=seq(5, max_h, 10), labels=FALSE, lwd=0, lwd.ticks=1, tcl=par('tcl')*2/3)
+  axis(side=2, at=seq(0, max_h, 10), gap.axis=0.1, lwd=0, lwd.ticks=1)
+  
+  
+  matlines(x=unique(df$alter), y=matrix(df$h_funk, ncol=length(ekls)), col="#3465a4", lty=1)
+  matlines(x=unique(df$alter), y=matrix(df$h_klass, ncol=length(ekls)), col="#73d216", lty=1)
+  matpoints(x=et$Alter, y=(if(hoehe_typ=="mittel") et$Hg else et$H100), 
+            col='gray10', pch=1, cex=0.5, lwd=0.8)
+  
+  mtext(paste0("Bestandes", hoehe_typ, "höhen\n", art, ", ",
+               min(ekls), ". bis ", max(ekls), ". Ekl."), side=3, line=-2.1, adj=0.02)
+  legend("bottomright", inset=0.01, bty="o", box.col=NA,
+         legend = c("Tafelwerte",
+                    "klass. Interpolation", 
+                    "funkt. Interpolation"),
+         col=c("gray10", "#73d216", "#3465a4"), 
+         pch=c(1, NA, NA), cex=0.8, lwd=c(1,2,2), lty=c(NA, 1, 1))
+  
+  par(op)
+}
+
+library(et.nwfva)
+```
+
+
+# et.nwfva
+
+Die neuen Ertragstafeln der NW-FVA (Albert et al. 2021) bieten für die fünf Hauptbaumarten Eiche, Buche, Fichte, Douglasie und Kiefer ein Planungsinstrument, welches das aktuelle Zuwachsniveau der Wälder Nordwestdeutschlands widerspiegelt und das empfohlene waldbauliche Behandlungskonzept einer gestaffelten Hochdurchforstung unterstellt.
+
+Neben den Tafelwerten bietet `et.nwfva` sowohl die Möglichkeit zu bonitieren als auch Bestandeshöhen und Tafelwerte für beliebige Bonitäten und Alter zu bestimmen. Für die Inter- und Extrapolation kommen standardmäßig funktionale Bonitätsfächer zum Einsatz, aber die klassische Methode mittels Dreisatz steht ebenfalls zur Verfügung. Die funktionale Interpolation kann den Bereich von der -3. bis 7. Ertragsklasse und den gesamten Altersbereich bedienen. Die klassische Interpolation ist auf den Bonitätsbereich -2. bis 4. Ertragsklasse und den Altersbereich 5 bis max. zulässiges Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160) beschränkt.
+
+
+```{r faecher, echo=FALSE, fig.width=5, fig.height=3.3, out.width="50%"}
+
+plotte_bonfaecher(art="Eiche", hoehe_typ="mittel", max_alter=230, ekls=-3:7)
+plotte_bonfaecher(art="Kiefer", hoehe_typ="ober", max_alter=170, ekls=-3:7)
+```
+
+
+## Beispiele
+
+Einen Überblick über die vorhandenen Tafeln liefert `et_liste()` und Detailinformationen zu einer Tafel `et_info()`. Ganze Tafeln einer Baumart oder Auszüge aus einer Tafel, z.B. für bestimmte Bonitäten oder Alter, bietet `et_tafel()`.  
+
+
+```{r bsp_tafel}
+library(et.nwfva)
+
+# Ertragstafelwerte für Buche 1. Ertragsklasse ausgeben (hier: Zeilen 1 bis 6)
+head(et_tafel("Buche", bon=1))
+
+
+# Eine Ertragstafelzeile interpoliert für Fichte 2.4. Ekl. und Alter 82
+et_tafel("Fi", bon=2.4, alter=82)
+```
+
+
+Die Bonitierung von Beständen erfolgt mit `et_bonitaet()` anhand von Bestandesalter und -höhe standardmäßig über funktionale Bonitätsfächer. Auf Wunsch ist auch die klassische Bonitierung mittels Dreisatz verfügbar. Im Fall der Interpolation zwischen den Tafelwerten unterscheiden sich die Verfahren kaum, aber im Extrapolationsbereich können die Abweichungen durchaus beachtlich sein (siehe Abbildung oben).
+
+```{r bsp_bonitaet}
+
+# Ertragsklasse eines 80 jährigen Eichenbestandes mit der Mittelhöhe 16m
+et_bonitaet("Eiche", alter=80, hoehe=16)
+et_bonitaet("Eiche", alter=80, hoehe=16, methode="klassisch")
+
+```
+
+
+Sollte im Hinblick auf das Alter und/oder die Bestandeshöhe eine Extrapolation der Tafelwerte notwendig sein, gibt die klassische Methode einen Hinweis aus. Falls dabei der zulässige Extrapolationsbereich verlassen würde, geben beide Methoden eine Warnung und je nach Wert des Parameters `kapp_na` den jeweiligen Grenzwert oder `NA` zurück.
+
+```{r bsp_bonitaet_extra}
+# Ertragsklasse eines 120 jährigen Kiefernbestandes mit Oberhöhe 32m
+et_bonitaet("Kiefer", alter=120, hoehe=45, hoehe_typ="ober", methode="funktional")
+et_bonitaet("Kiefer", alter=120, hoehe=45, hoehe_typ="ober", methode="klassisch")
+
+# Anfrage außerhalb des zulässigen Bonitätsbereichs
+et_bonitaet("Kiefer", alter=70, hoehe=40, hoehe_typ="ober")
+
+```
+
+Die Bestandeshöhenwerte für die Abbildungen oben wurden mit der Funktion `et_hoehe()` berechnet. Umrechnungen von relativen Ertragsklassen in absolute Oberhöhenbonitäten (Oberhöhe H100 im Alter 100 in Metern) und umgekehrt ermöglicht die Funktion `et_bontrans()`.
+
+```{r}
+# Bestandesmittelhöhe für Buche im Alter 75 und 1.25. Ekl.
+et_hoehe('bu', alter=75, bon=1.25, hoehe_typ="mittel")
+et_hoehe('bu', alter=75, bon=1.25, hoehe_typ="mittel", methode="klass")
+
+
+# Umrechnung von der Oberhöhenbonität 27 zur relativen Ertragsklasse für Kiefer
+et_bontrans("Kiefer", bon=27, richtung="abs_zu_rel")
+
+```
+
+
+
+## Literatur
+Albert M., Nagel J., Schmidt M., Nagel R.-V., Spellmann H. (2021): Eine neue
+  Generation von Ertragstafeln für Eiche, Buche, Fichte, Douglasie und Kiefer
+  [Datensatz]. Version 1.0. Zenodo. https://doi.org/10.5281/zenodo.6343906

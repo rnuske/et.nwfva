@@ -1,0 +1,86 @@
+---
+title: "Beispiele"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Beispiele}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(et.nwfva)
+```
+
+
+
+## Bonitieren
+
+Die Bonitierung eines Bestandes erfolgt in den neuen Ertragstafeln für Eiche, Buche, Fichte, Douglasie und Kiefer (Albert et al., 2021) gemäß der klassischen Einordnungsbeziehung über das Wertepaar Bestandesalter und Bestandeshöhe (Ober- oder Mittelhöhe. Den neuen Ertragstafeln liegen baumartspezifische funktionalisierte Bonitätsfächer basierend auf den Alters-Oberhöhenverläufen der Tafeln aus der Ertragstafelsammlung von Schober (1995) zu Grunde.
+
+
+```{r et_bonitaet}
+# Bonitätsschätzung: Ausgabe der relativen Ertragsklasse
+et_bonitaet(art="Buche", alter=70, hoehe=29.1, hoehe_typ="ober")
+```
+
+```{r et_bontrans}
+# Umrechnung von rel. Ertragsklasse in abs. Oberhöhenbonität
+et_bontrans("bu", bon=0.18, richtung="rel_zu_abs")
+```
+
+## Inter-/Extrapolation von Ertragstafelwerten
+
+Eine lineare Interpolation der Ertragstafelwerte zwischen den Altern und Bonitäten ist eine praktikable und praxisnahe Lösung. Soweit im Paket Funktionen hinterlegt sind (z. B. Oberhöhe), wird ein exakter Wert berechnet.
+Eine lineare Extrapolation über den Alters- bzw. Bonitätsrahmen der Ertragstafeln hinaus ist streng genommen nicht zulässig. Die erzeugten Ertragstafelwerte sind kritisch zu hinterfragen. Funktional erzeugte Werte im Extrapolationsbereich sind in gewissen Maße vertrauenswürdiger.
+
+Hier eine beispielhafte Interpolation zwischen den Altersstufen und Bonitäten der Douglasien-Ertragstafel:
+``` {r tafel-Interpolation}
+et_tafel(art="Dgl", alter=37, bon=0.3)
+```
+
+Hier eine beispielhafte Extrapolation über den Altersrahmen der I. Ekl der Douglasien-Tafel hinaus (Werte kritisch interpretieren!):
+
+```{r tafel_extrapolation}
+et_tafel(art="Dgl", alter=140, bon=1.0)
+```
+
+
+
+## Eine beispielhafte Grafik
+Eine grafische Analyse des Altersverlaufes verschiedener Ertragstafelwerte kann z. B. Bonitätsunterschiede verdeutlichen.  
+
+```{r Beispiel_Abbildung, fig.width=7, fig.height=5}
+
+# Beispielhafte Abbildung des Zuwachses über dem Alter 
+# laut Buchen-Ertragstafel für die -I. bis III. Ekl.
+
+bu <- et_tafel(art="Bu")
+
+plot(0, 0, type='n', xlim=c(20, 150),ylim=c(0, 20),
+     xlab="Alter [a]", ylab="iV [m³/ha/a]")
+
+grid(nx=NULL, ny=NULL, col="lightgray", lty="dotted")
+
+lines(iV ~ Alter, data=bu[bu$Ekl == -1, ], col="black", lwd=2)
+lines(iV ~ Alter, data=bu[bu$Ekl == 0, ], col="tan4",  lwd=2)
+lines(iV ~ Alter, data=bu[bu$Ekl == 1, ], col="tan3",  lwd=2)
+lines(iV ~ Alter, data=bu[bu$Ekl == 2, ], col="tan2",  lwd=2)
+lines(iV ~ Alter, data=bu[bu$Ekl == 3, ], col="tan1",  lwd=2)
+
+legend("bottomright", inset=0.01, box.lty=0,
+       legend=c("-1. Ekl","0. Ekl", "1. Ekl", "2. Ekl","3. Ekl"),
+       col=c("black","tan4", "tan3", "tan2", "tan1"), 
+       lty=1, lwd=2, cex=0.8)
+```
+
+## Literatur
+Albert M., Nagel J., Schmidt M., Nagel R.-V., Spellmann H. (2021): Eine neue Generation von Ertragstafeln für Eiche, Buche, Fichte, Douglasie und Kiefer [Datensatz]. Version 1.0. Zenodo. https://doi.org/10.5281/zenodo.6343906
+
+Schober, R. (1995): Ertragstafeln wichtiger Baumarten. 4. Aufl. Frankfurt am Main: J. D. Sauerländer‘s Verlag.

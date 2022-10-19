@@ -1,0 +1,138 @@
+---
+title: "Vergleich der Interpolationsmethoden"
+author: Robert Nuske
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Vergleich der Interpolationsmethoden}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = FALSE,
+  fig.width=8, fig.height=5
+)
+```
+
+```{r setup}
+library(et.nwfva)
+
+plotte_bonfaecher <- function(art, hoehe_typ, max_alter=170, step_alter=5, ekls=NA){
+  
+  et <- et_tafel(art)
+  if(any(is.na(ekls)))
+    ekls <- sort(unique(et$Ekl))
+  
+  # Matrix mit Hg für alle Ekl für 5-150 Jahre
+  df <- expand.grid(alter=c(seq(0, 18, 2), seq(20, max_alter, step_alter)), ekl=ekls)
+  
+  df$h_funk <- suppressWarnings(suppressMessages( 
+    et_hoehe(art, df$alter, df$ekl, bon_typ="relativ", hoehe_typ, methode="funk")))
+  
+  df$h_klass <- NA
+  df$h_klass[df$ekl >= -2 & df$ekl <= 4] <- suppressWarnings(suppressMessages( 
+    et_hoehe(art, 
+             alter=df$alter[df$ekl >= -2 & df$ekl <= 4], 
+             bon=df$ekl[df$ekl >= -2 & df$ekl <= 4], 
+             bon_typ="relativ", hoehe_typ, methode="klass")))
+  
+  max_h <- max(df$h_klass, df$h_funk, na.rm=TRUE)
+  
+  # plot
+  op <- par(mar=c(2.5,2.5,0.5,0.5), mgp=c(1.5,0.5,0), tcl=-0.3)
+  
+  plot(0,0, type="n",  xaxt='n', yaxt='n',
+       xlim=c(0, max_alter), ylim=c(0, max_h),
+       xlab="Alter (a)", ylab="Höhe (m)")
+  
+  axis(side=1, at=seq(10, max_alter, 20), labels=FALSE, lwd=0, lwd.ticks=1, tcl=par('tcl')*2/3)
+  axis(side=1, at=seq(0, max_alter, 20), gap.axis=0.1, lwd=0, lwd.ticks=1)
+  axis(side=2, at=seq(5, max_h, 10), labels=FALSE, lwd=0, lwd.ticks=1, tcl=par('tcl')*2/3)
+  axis(side=2, at=seq(0, max_h, 10), gap.axis=0.1, lwd=0, lwd.ticks=1)
+  
+  matlines(x=unique(df$alter), y=matrix(df$h_funk, ncol=length(ekls)), col="#3465a4", lty=1)
+  matlines(x=unique(df$alter), y=matrix(df$h_klass, ncol=length(ekls)), col="#73d216", lty=1)
+  matpoints(x=et$Alter, y=(if(hoehe_typ=="mittel") et$Hg else et$H100), 
+            col='gray10', pch=1, cex=0.5, lwd=0.8)
+  
+  mtext(paste0("Bestandes", hoehe_typ, "höhen\n", art, ", ",
+               min(ekls), ". bis ", max(ekls), ". Ekl."), side=3, line=-2.1, adj=0.02)
+  legend("bottomright", inset=0.01, bty="o", box.col=NA,
+         legend = c("Tafelwerte",
+                    "klass. Interpolation", 
+                    "funkt. Interpolation"),
+         col=c("gray10", "#73d216", "#3465a4"), 
+         pch=c(1, NA, NA), cex=0.8, lwd=c(1,2,2), lty=c(NA, 1, 1))
+  
+  par(op)
+}
+```
+
+
+## Einleitung
+Der Vergleich der klassischen und der funktionalen Interpolation erfolgt für die fünf Baumarten Eiche, Buche, Fichte, Douglasie und Kiefer anhand von Bestandeshöhenkurven. Ebenfalls dargestellt sind die tabellierten Werte der neuen Ertragstafel (Albert et al. 2021). In der klassischen Interpolation werden die nicht tabellierten Werte mittels Dreisatz bestimmt. Bei der funktionalen Interpolation kommen die funktionalisierten Bonitätsfächer zum Einsatz. Alle verwendeten Methoden sind in diesem Paket implementiert.
+
+- Der Altersbereich der klassischen Interpolation ist auf den Bereich 5 bis max. zulässiges Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160) beschränkt. Ober- und unterhalb dieses Intervalls wird NA ausgegeben. Bei der funktionalen Interpolation ist der Altersbereich nicht beschränkt.
+
+- Der Bonitätsbereich ist bei der klassischen Interpolation auf den Bereich -2. bis 4. Ertragsklasse und bei der funktionalen Interpolation auf den Bereich -3. bis 7. Ertragsklasse begrenzt.
+
+- Die Tafelwerte werden von beiden Interpolationsmethoden sehr gut reproduziert. Im Interpolationsbereich weichen klassische und funktionale Methode nur wenig voneinander ab. Aber in den Extrapolationsbereichen verhalten sich die Methoden unterschiedlich.
+
+- Die funktionale Interpolation bietet über den ganzen Bereich biologisch plausible Ergebnisse. Die klassische Interpolation überschätzt insbesondere beim Nadelholz bei guten Ertragsklassen im hohen Alter die Bestandeshöhen deutlich. 
+
+
+## Bestandeshöhenkurven
+
+### Eiche
+```{r Ei_H100}
+plotte_bonfaecher(art="Eiche", hoehe_typ="ober", max_alter=230, ekls=-3:7)
+```
+
+```{r Ei_Hg}
+plotte_bonfaecher(art="Eiche", hoehe_typ="mittel", max_alter=230, ekls=-3:7)
+```
+
+
+### Buche
+```{r Bu_H100}
+plotte_bonfaecher(art="Buche", hoehe_typ="ober", max_alter=190, ekls=-3:7)
+```
+
+```{r Bu_Hg}
+plotte_bonfaecher(art="Buche", hoehe_typ="mittel", max_alter=190, ekls=-3:7)
+```
+
+
+### Fichte
+```{r Fi_H100}
+plotte_bonfaecher(art="Fichte", hoehe_typ="ober", max_alter=170, ekls=-3:7)
+```
+
+```{r Fi_Hg}
+plotte_bonfaecher(art="Fichte", hoehe_typ="mittel", max_alter=170, ekls=-3:7)
+```
+
+
+### Douglasie
+```{r Dgl_H100}
+plotte_bonfaecher(art="Douglasie", hoehe_typ="ober", max_alter=170, ekls=-3:7)
+```
+
+```{r Dgl_Hg}
+plotte_bonfaecher(art="Douglasie", hoehe_typ="mittel", max_alter=170, ekls=-3:7)
+```
+
+
+### Kiefer
+```{r Ki_H100}
+plotte_bonfaecher(art="Kiefer", hoehe_typ="ober", max_alter=170, ekls=-3:7)
+```
+
+```{r Ki_Hg}
+plotte_bonfaecher(art="Kiefer", hoehe_typ="mittel", max_alter=170, ekls=-3:7)
+```

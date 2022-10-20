@@ -1,0 +1,14 @@
+kind: pipeline
+name: rocker/r-ver:latest
+
+steps:
+- name: build 'n check
+  image: rocker/r-ver:latest
+  commands:
+  - echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' > /usr/local/lib/R/etc/Rprofile.site   # sets a new CRAN mirror, default is too old
+  - R -e 'install.packages("tinytest", repos="https://cloud.r-project.org")'
+  - R CMD build --no-build-vignettes --no-manual .
+  - FILE=$(ls -1t *.tar.gz | head -n 1)
+  - export _R_CHECK_CRAN_INCOMING_=FALSE
+  - export _R_CHECK_FORCE_SUGGESTS_=FALSE
+  - R CMD check $FILE --no-vignettes --no-manual --as-cran --install-args=--install-tests

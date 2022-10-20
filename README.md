@@ -31,6 +31,30 @@ Dgl, Ki 160) beschränkt.
 
 <img src="man/figures/README-faecher-1.png" width="50%" /><img src="man/figures/README-faecher-2.png" width="50%" />
 
+## Installation
+
+Die aktuelle Version des Paketes kann für die gängigen Betriebssysteme
+(Windows, Linux, macOS) aus dem [R-Universe der
+NW-FVA](https://nw-fva.r-universe.dev) installiert werden.
+
+``` r
+# NW-FVA Universe in R bekannt machen
+options(repos = c(
+  nwfva = "https://nw-fva.r-universe.dev",
+  CRAN = "https://cloud.r-project.org"))
+
+# und Paket wie gewohnt installieren
+install.packages("et.nwfva")
+```
+
+Die Entwicklerversion kann mit dem Paket `remotes` direkt aus
+[Github](https://github.com/rnuske/et.nwfva) kompiliert und installiert
+werden.
+
+``` r
+remotes::install_github("rnuske/et.nwfva")
+```
+
 ## Beispiele
 
 Einen Überblick über die vorhandenen Tafeln liefert `et_liste()` und
@@ -103,9 +127,9 @@ umgekehrt ermöglicht die Funktion `et_bontrans()`.
 
 ``` r
 # Bestandesmittelhöhe für Buche im Alter 75 und 1.25. Ekl.
-et_hoehe('bu', alter=75, bon=1.25, hoehe_typ="mittel")
+et_hoehe("bu", alter=75, bon=1.25, hoehe_typ="mittel")
 #> [1] 24.4
-et_hoehe('bu', alter=75, bon=1.25, hoehe_typ="mittel", methode="klass")
+et_hoehe("bu", alter=75, bon=1.25, hoehe_typ="mittel", methode="klass")
 #> [1] 24.4
 
 

@@ -42,7 +42,7 @@ eindeutig bleibt.}
 \item{kapp_na}{Bonitäten werden bei Methode \code{"klassisch"} jenseits der -2. und
 4. und bei \code{"funktional"} jenseits der -3. und 7. Ertragsklasse gekappt.
 Wenn \code{TRUE}, wird für gekappte Werte \code{NA} ausgegeben, ansonsten der
-jeweilige Grenzwert.}
+jeweilige Grenzwert. Ein Wahrheitswert.}
 
 \item{...}{Weitere Parameter, wie z.B. für funkt. Bonitätsfächermodell auf
 Basis der Hossfeld-Funktion (s. Details).}

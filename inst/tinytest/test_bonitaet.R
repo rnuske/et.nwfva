@@ -9,7 +9,9 @@
 #  aus data-raw/bonitaetsfaecher_fuer_tests.R
 
 
-# Eingabetests
+#===============================================================================
+#  Testet die Eingabe Validierung
+#===============================================================================
 expect_error(et_bonitaet()) # verpflichtend art, alter, hoehe
 expect_error(et_bonitaet('fi'))
 expect_error(et_bonitaet('fi', alter=50))
@@ -17,6 +19,14 @@ expect_error(et_bonitaet('fi', hoehe=25))
 expect_error(et_bonitaet(art='fi', alter=50, hoehe=25, hoehe_typ="spitz"))
 expect_error(et_bonitaet(art='fi', alter=50, hoehe=25, methode="modern"))
 expect_error(et_bonitaet(art='fi', alter=50, hoehe=25, bon_typ="si"))
+
+expect_silent(et_bonitaet(211, alter=80, hoehe=35, kapp_na=TRUE))
+expect_error(et_bonitaet(211, alter=80, hoehe=35, kapp_na=NULL))
+expect_error(et_bonitaet(211, alter=80, hoehe=35, kapp_na=NA))
+expect_error(et_bonitaet(211, alter=80, hoehe=35, kapp_na=1))
+expect_error(et_bonitaet(211, alter=80, hoehe=35, kapp_na="a"))
+expect_error(et_bonitaet(211, alter=80, hoehe=35, kapp_na=c(TRUE, TRUE, FALSE)))
+
 
 
 #===============================================================================

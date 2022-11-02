@@ -63,7 +63,7 @@
 #' @param kapp_na Bonitäten werden bei Methode `"klassisch"` jenseits der -2. und
 #'   4. und bei `"funktional"` jenseits der -3. und 7. Ertragsklasse gekappt.
 #'   Wenn `TRUE`, wird für gekappte Werte `NA` ausgegeben, ansonsten der
-#'   jeweilige Grenzwert.
+#'   jeweilige Grenzwert. Ein Wahrheitswert.
 #' @param ... Weitere Parameter, wie z.B. für funkt. Bonitätsfächermodell auf
 #'   Basis der Hossfeld-Funktion (s. Details).
 #'
@@ -131,8 +131,10 @@ et_bonitaet <- function(art, alter, hoehe,
   if(missing(art) | missing(alter) | missing(hoehe))
     stop("art, alter und hoehe m\u00fcssen angegeben werden.")
   hoehe_typ <- match.arg(hoehe_typ, c("mittel", "ober"))
-  methode <- match.arg(methode, c("funktional", "klassisch"))
   bon_typ <- match.arg(bon_typ, c("relativ", "absolut"))
+  methode <- match.arg(methode, c("funktional", "klassisch"))
+  if(length(kapp_na) > 1 || !is.logical(kapp_na) || is.na(kapp_na))
+    stop("kapp_na muss ein Boolean/Wahrheitswert sein.")
 
   if(methode == "funktional"){
     # behandle dot-dot-dot auf der Suche nach hoss

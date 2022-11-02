@@ -1,5 +1,6 @@
 ---
 title: "Beispiele"
+author: "M. Albert"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Beispiele}
@@ -19,11 +20,9 @@ library(et.nwfva)
 ```
 
 
-
 ## Bonitieren
 
 Die Bonitierung eines Bestandes erfolgt in den neuen Ertragstafeln für Eiche, Buche, Fichte, Douglasie und Kiefer (Albert et al., 2021) gemäß der klassischen Einordnungsbeziehung über das Wertepaar Bestandesalter und Bestandeshöhe (Ober- oder Mittelhöhe. Den neuen Ertragstafeln liegen baumartspezifische funktionalisierte Bonitätsfächer basierend auf den Alters-Oberhöhenverläufen der Tafeln aus der Ertragstafelsammlung von Schober (1995) zu Grunde.
-
 
 ```{r et_bonitaet}
 # Bonitätsschätzung: Ausgabe der relativen Ertragsklasse
@@ -34,6 +33,7 @@ et_bonitaet(art="Buche", alter=70, hoehe=29.1, hoehe_typ="ober")
 # Umrechnung von rel. Ertragsklasse in abs. Oberhöhenbonität
 et_bontrans("bu", bon=0.18, richtung="rel_zu_abs")
 ```
+
 
 ## Inter-/Extrapolation von Ertragstafelwerten
 
@@ -52,8 +52,8 @@ et_tafel(art="Dgl", alter=140, bon=1.0)
 ```
 
 
-
 ## Eine beispielhafte Grafik
+
 Eine grafische Analyse des Altersverlaufes verschiedener Ertragstafelwerte kann z. B. Bonitätsunterschiede verdeutlichen.  
 
 ```{r Beispiel_Abbildung, fig.width=7, fig.height=5}
@@ -79,6 +79,7 @@ legend("bottomright", inset=0.01, box.lty=0,
        col=c("black","tan4", "tan3", "tan2", "tan1"), 
        lty=1, lwd=2, cex=0.8)
 ```
+
 
 ## Literatur
 Albert M., Nagel J., Schmidt M., Nagel R.-V., Spellmann H. (2021): Eine neue Generation von Ertragstafeln für Eiche, Buche, Fichte, Douglasie und Kiefer [Datensatz]. Version 1.0. Zenodo. https://doi.org/10.5281/zenodo.6343906

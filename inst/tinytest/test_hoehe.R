@@ -4,6 +4,15 @@
 #
 #===============================================================================
 
+#===============================================================================
+#  Testet die Eingabe Validierung
+#===============================================================================
+expect_silent(et_hoehe(511, alter=80, bon=1.3))
+expect_error(et_hoehe(511, alter="80", bon=1.3))
+expect_error(et_hoehe(511, alter=TRUE, bon=1.3))
+expect_error(et_hoehe(511, alter=80, bon="1.3"))
+expect_error(et_hoehe(511, alter=80, bon=TRUE))
+
 
 #===============================================================================
 #  Testet die funktionalisierte Inter-/Extrapolation

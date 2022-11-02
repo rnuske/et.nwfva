@@ -14,6 +14,15 @@ norm <-data.frame(
 
 
 #===============================================================================
+#  Testet die Eingabe Validierung
+#===============================================================================
+expect_silent(et_bontrans("Ei", bon=32))
+expect_error(et_bontrans("Ei",  bon="0"))
+expect_error(et_bontrans("Ei",  bon="a"))
+expect_error(et_bontrans("Ei",  bon=TRUE))
+
+
+#===============================================================================
 #  Testet die funktionalisierte Inter-/Extrapolation
 #===============================================================================
 res <- data.frame(Art=character(nrow(norm)), H100=numeric(nrow(norm)),  Ekl=numeric(nrow(norm)))

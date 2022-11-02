@@ -5,6 +5,28 @@
 #===============================================================================
 #  Es gibt zur Zeit nur die klassische Methode der Interpolation
 
+#===============================================================================
+#  Testet die Eingabe Validierung
+#===============================================================================
+expect_silent(et_tafel(211, alter=NULL, bon=NULL))
+expect_silent(et_tafel(211, alter=45, bon=NULL))
+expect_silent(et_tafel(211, alter=NULL, bon=1.2))
+expect_silent(et_tafel(211, alter=45, bon=1.2))
+
+expect_error(et_tafel(211,  alter="0", bon=NULL))
+expect_error(et_tafel(211,  alter="a", bon=NULL))
+expect_error(et_tafel(211,  alter=TRUE, bon=NULL))
+expect_error(et_tafel(211,  alter=NULL, bon="2"))
+expect_error(et_tafel(211,  alter=NULL, bon="b"))
+expect_error(et_tafel(211,  alter=NULL, bon=TRUE))
+expect_error(et_tafel(211,  alter="0", bon="1"))
+expect_error(et_tafel(211,  alter="a", bon="b"))
+expect_error(et_tafel(211,  alter=TRUE, bon=TRUE))
+
+
+#===============================================================================
+#  Testet die klassische Inter-/Extrapolation mittels Dreisatz
+#===============================================================================
 
 # Gebe ganze Tafel aus (ca 100 Zeilen) -----------------------------------------
 # zieht nur die entsprechende Tafel aus dem Datensatz, keine Berechnung

@@ -21,10 +21,10 @@
 #' @param art Baumartenbezeichnung entweder als Kürzel, deutscher Name,
 #'   lateinischer Name oder in niedersächsischer Kodierung.
 #'   Für vorhandene Arten siehe [et_liste()].
-#' @param alter Bestandesalter in Jahren (optional). Zwischen 5 und max.
-#'   zulässigem Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160).
-#' @param bon Ertragsklasse (optional).  Bei Methode `"klassisch"` im Interval
-#'   \[-2,4\].
+#' @param alter Bestandesalter in Jahren als Zahlwert (optional). Zwischen 5
+#'   und max. zulässigem Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160).
+#' @param bon Ertragsklasse als Zahlwert (optional).  Bei Methode `"klassisch"`
+#'   im Interval \[-2,4\].
 #' @param bon_typ Die Bonität kann als relative Ertragsklasse (`"relativ"`) oder
 #'   absolute Oberhöhenbonität (H100 im Alter 100, `"absolut"`) angegeben werden.
 #'   Parameter kann gekürzt werden, solange er eindeutig bleibt.
@@ -80,7 +80,11 @@
 et_tafel <- function(art, alter=NULL, bon=NULL, bon_typ="relativ",
                      methode="klassisch"){
   if(missing(art))
-    stop("Eine Baumart muss mindestens angegeben werden.")
+    stop("Es muss mindestens eine Baumart angegeben werden.")
+  if(!is.null(alter) && !is.numeric(alter))
+    stop("alter muss eine Zahl sein.")
+    if(!is.null(bon) && !is.numeric(bon))
+    stop("bon muss eine Zahl sein.")
   bon_typ <- match.arg(bon_typ, c("relativ", "absolut"))
   methode <- match.arg(methode, c("funktional", "klassisch"))
 

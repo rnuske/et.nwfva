@@ -69,6 +69,8 @@ et_bontrans <- function(art, bon, richtung="abs_zu_rel", methode="funktional") {
 
   if(missing(art) | missing(bon))
     stop("art und bon m\u00fcssen angegeben werden.")
+  if(!is.numeric(bon))
+    stop("bon muss eine Zahl sein.")
   methode <- match.arg(methode, c("funktional", "klassisch"))
   richtung <- match.arg(richtung, c("abs_zu_rel", "rel_zu_abs"))
 

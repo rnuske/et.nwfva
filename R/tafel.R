@@ -81,10 +81,9 @@ et_tafel <- function(art, alter=NULL, bon=NULL, bon_typ="relativ",
                      methode="klassisch"){
   if(missing(art))
     stop("Es muss mindestens eine Baumart angegeben werden.")
-  if(!is.null(alter) && !is.numeric(alter))
-    stop("alter muss eine Zahl sein.")
-    if(!is.null(bon) && !is.numeric(bon))
-    stop("bon muss eine Zahl sein.")
+  if((!is.null(alter) && !is.numeric(alter)) ||
+     (!is.null(bon) && !is.numeric(bon)))
+    stop("alter und bon m\u00fcssen NULL oder Zahlen sein.")
   bon_typ <- match.arg(bon_typ, c("relativ", "absolut"))
   methode <- match.arg(methode, c("funktional", "klassisch"))
 

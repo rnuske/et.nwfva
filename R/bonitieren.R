@@ -47,8 +47,8 @@
 #'   lateinischer Name oder in niedersächsischer Kodierung.
 #'   Für vorhandene Arten siehe [et_liste()].
 #' @param alter Bestandesalter in Jahren. Bei Methode `"klassisch"` zwischen 5
-#'   und max. zulässigem Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160).
-#' @param hoehe Bestandeshöhe in Meter.
+#'   und max. zulässigem Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160). Ein Zahlwert.
+#' @param hoehe Bestandeshöhe in Meter. Ein Zahlwert.
 #' @param hoehe_typ Die Bestandeshöhe kann als Mittelhöhe (`"mittel"`) oder
 #'   Oberhöhe (`"ober"`) angegeben werden. Parameter kann gekürzt werden, solange
 #'   er eindeutig bleibt.
@@ -130,6 +130,8 @@ et_bonitaet <- function(art, alter, hoehe,
 
   if(missing(art) | missing(alter) | missing(hoehe))
     stop("art, alter und hoehe m\u00fcssen angegeben werden.")
+  if(!is.numeric(alter) || !is.numeric(hoehe))
+    stop("alter und hoehe m\u00fcssen numerisch sein.")
   hoehe_typ <- match.arg(hoehe_typ, c("mittel", "ober"))
   bon_typ <- match.arg(bon_typ, c("relativ", "absolut"))
   methode <- match.arg(methode, c("funktional", "klassisch"))

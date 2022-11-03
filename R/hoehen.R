@@ -118,10 +118,8 @@ et_hoehe <- function(art, alter, bon, bon_typ="relativ",
 
   if(missing(art) | missing(alter) | missing(bon))
     stop("art, alter und bon m\u00fcssen angegeben werden.")
-  if(!is.numeric(bon))
-    stop("bon muss eine Zahl sein.")
-  if(!is.numeric(alter))
-    stop("alter muss eine Zahl sein.")
+  if(!is.numeric(bon) || !is.numeric(alter))
+    stop("bon und alter m\u00fcssen numerisch sein.")
   bon_typ <- match.arg(bon_typ, c("relativ", "absolut"))
   hoehe_typ <- match.arg(hoehe_typ, c("mittel", "ober"))
   methode <- match.arg(methode, c("funktional", "klassisch"))

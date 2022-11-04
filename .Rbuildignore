@@ -4,4 +4,3 @@
 ^README\.Rmd$
 ^vignettes/Funktionalisiertes\.Rmd$
 ^\.github$
-^\.drone\.yml$

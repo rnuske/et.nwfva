@@ -6,8 +6,6 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/rnuske/et.nwfva/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rnuske/et.nwfva/actions/workflows/R-CMD-check.yaml)
-[![Drone Build
-Status](https://cloud.drone.io/api/badges/rnuske/et.nwfva/status.svg)](https://cloud.drone.io/rnuske/et.nwfva)
 [![Package-License](https://img.shields.io/badge/license-GPL--2-brightgreen.svg?style=flat)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7207596.svg)](https://doi.org/10.5281/zenodo.7207596)
 <!-- badges: end -->

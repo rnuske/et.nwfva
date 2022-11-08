@@ -81,9 +81,12 @@ et_tafel <- function(art, alter=NULL, bon=NULL, bon_typ="relativ",
                      methode="klassisch"){
   if(missing(art))
     stop("Es muss mindestens eine Baumart angegeben werden.")
+  if(any(sapply(environment(), length) > 1))
+    stop("et_tafel() ist nicht vektorisiert. ",
+         "Alle Parameter m\u00fcssen die L\u00e4nge 1 haben.")
   if((!is.null(alter) && !is.numeric(alter)) ||
      (!is.null(bon) && !is.numeric(bon)))
-    stop("alter und bon m\u00fcssen NULL oder Zahlen sein.")
+    stop("alter und bon m\u00fcssen NULL oder numerisch sein.")
   bon_typ <- match.arg(bon_typ, c("relativ", "absolut"))
   methode <- match.arg(methode, c("funktional", "klassisch"))
 

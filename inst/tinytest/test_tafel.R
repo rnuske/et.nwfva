@@ -29,6 +29,11 @@ expect_equal(et_tafel("611", bon=1, alter=100),
                         Dg=59.5, Dw=91.1, V=975, N_aus=18, G_aus=4.1,
                         Dg_aus=53.7, V_aus=69, iV=20.3, GWL=2023, dGZ=20.2))
 
+# Vektor mit Länge > 1 übergeben
+expect_error(et_tafel(art=c("Dgl", "Bu"), alter=37, bon=1))
+expect_error(et_tafel(711, alter=37:40, bon=1))
+expect_error(et_tafel(211, alter=37, bon=1:3))
+
 
 #===============================================================================
 #  Testet die klassische Inter-/Extrapolation mittels Dreisatz

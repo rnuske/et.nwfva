@@ -26,8 +26,13 @@ hole_et <- function(species){
 
 
 art_code <- function(species){
-  # Annahme: species ist numeric oder character
-  if(is.numeric(species)){
+  # Annahme: species ist integer oder character
+
+  # Codenummern als Text übergeben?
+  tmp <- suppressWarnings(as.integer(species))
+  if(!is.na(tmp)) species <- tmp
+
+  if(is.integer(species)){
     if(!(species %in% art_tabelle$code))
       stop(paste('Der Baumartencode', sQuote(species), 'ist nicht vorhanden.'))
   } else {

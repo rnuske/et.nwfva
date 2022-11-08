@@ -21,6 +21,9 @@ expect_error(et_bontrans("Ei",  bon="0"))
 expect_error(et_bontrans("Ei",  bon="a"))
 expect_error(et_bontrans("Ei",  bon=TRUE))
 
+# Baumartencode als character übergeben
+expect_equal(et_bontrans("211", bon=32), 1.1)
+
 
 #===============================================================================
 #  Testet die funktionalisierte Inter-/Extrapolation

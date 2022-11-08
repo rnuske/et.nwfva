@@ -23,6 +23,12 @@ expect_error(et_tafel(211,  alter="0", bon="1"))
 expect_error(et_tafel(211,  alter="a", bon="b"))
 expect_error(et_tafel(211,  alter=TRUE, bon=TRUE))
 
+# Baumartencode als character übergeben
+expect_equal(et_tafel("611", bon=1, alter=100),
+             data.frame(Ekl=1, Alter=100, N=204, Hg=42.4, H100=45, G=56.6,
+                        Dg=59.5, Dw=91.1, V=975, N_aus=18, G_aus=4.1,
+                        Dg_aus=53.7, V_aus=69, iV=20.3, GWL=2023, dGZ=20.2))
+
 
 #===============================================================================
 #  Testet die klassische Inter-/Extrapolation mittels Dreisatz

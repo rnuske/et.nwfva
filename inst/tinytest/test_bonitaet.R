@@ -32,6 +32,8 @@ expect_error(et_bonitaet(211, alter=80, hoehe=35, kapp_na=1))
 expect_error(et_bonitaet(211, alter=80, hoehe=35, kapp_na="a"))
 expect_error(et_bonitaet(211, alter=80, hoehe=35, kapp_na=c(TRUE, TRUE, FALSE)))
 
+# Baumartencode als character übergeben
+expect_equal(et_bonitaet("111", alter=40, hoehe=20), -0.4)
 
 
 #===============================================================================

@@ -13,6 +13,9 @@ expect_error(et_hoehe(511, alter=TRUE, bon=1.3))
 expect_error(et_hoehe(511, alter=80, bon="1.3"))
 expect_error(et_hoehe(511, alter=80, bon=TRUE))
 
+# Baumartencode als character übergeben
+expect_equal(et_hoehe("511", alter=80, bon=1.5), 29.7)
+
 
 #===============================================================================
 #  Testet die funktionalisierte Inter-/Extrapolation

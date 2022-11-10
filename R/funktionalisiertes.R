@@ -63,6 +63,8 @@ funk_si2ekl <- function(art, si) {
 
   # Bonitätsbereich [-3,7] checken
   ekl <- ifelse(ekl < -3 | ekl > 7, NA, ekl)
+  if(any(is.na(ekl)))
+    warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] => NA.")
 
   return(ekl)
 }
@@ -112,6 +114,8 @@ funk_ekl2si <- function(art, ekl) {
 
   # Bonitätsbereich [-3,7] checken
   si <- ifelse(ekl < -3 | ekl > 7, NA, si)
+  if(any(is.na(si)))
+    warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] \u00fcbergeben => NA.")
 
   return(si)
 }
@@ -165,17 +169,27 @@ funk_h100 <- function(art, alter, bon, bon_als_ekl = FALSE, hoss = FALSE) {
   if (sum(art %in% c(110,111,112,211,511,611,711)) != length(art)) {
     warning("Es wurden unbekannte Baumarten \u00fcbergeben!")  # never seen, art_code() stoppt vorher
   }
-  # Negative Alter führen zu NaN, es soll aber NA sein
+  # Negative Alter führen zu NaN, es soll aber NA sein. Ja, so werden NaN gefunden.
   h100[is.na(h100)] <- NA
+  if(any(is.na(h100)))
+    warning("alter ist nicht positiv => NA.")
 
   # Bonitäten außerhalb des Extrapolationsbereichs [-3,7]
   if(bon_als_ekl){
-    h100 <- ifelse(bon < -3 | bon >  7, NA, h100)
+    if(any(bon < -3 | bon > 7)){
+      warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] => NA.")
+      h100 <- ifelse(bon < -3 | bon > 7, NA, h100)
+    }
   } else {
     # vorgerechnete abs Bonitätsgrenzen in named vector
     art_c <- as.character(art)
-    h100 <- unname(ifelse(bon < absbon_min_funk[art_c] |
-                            bon > absbon_max_funk[art_c], NA, h100))
+    if(any(bon < absbon_min_funk[art_c] | bon > absbon_max_funk[art_c])){
+      warning("Absolute Bonit\u00e4t au\u00dferhalb des Intervalls [",
+              absbon_min_funk[art_c], ",", absbon_max_funk[art_c], "] der Baumart ",
+              sQuote(art), " => NA.")
+      h100 <- unname(ifelse(bon < absbon_min_funk[art_c] |
+                              bon > absbon_max_funk[art_c], NA, h100))
+    }
   }
 
   return(h100)
@@ -229,15 +243,26 @@ funk_hg <- function(art, alter, bon, bon_als_ekl = FALSE) {
 
   # Negative Alter führen zu NaN, es soll aber NA sein
   hg[is.na(hg)] <- NA
+  if(any(is.na(hg)))
+    warning("alter ist nicht positiv => NA.")
+
 
   # Bonitäten außerhalb des Extrapolationsbereichs [-3,7]
   if(bon_als_ekl){
-    hg <- ifelse(bon < -3 | bon >  7, NA, hg)
+    if(any(bon < -3 | bon > 7)){
+      warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] => NA.")
+      hg <- ifelse(bon < -3 | bon >  7, NA, hg)
+    }
   } else {
     # vorgerechnete abs Bonitätsgrenzen in named vector
     art_c <- as.character(art)
-    hg <- unname(ifelse(bon < absbon_min_funk[art_c] |
-                          bon > absbon_max_funk[art_c], NA, hg))
+    if(any(bon < absbon_min_funk[art_c] | bon > absbon_max_funk[art_c])){
+      warning("Absolute Bonit\u00e4t au\u00dferhalb des Intervalls [",
+              absbon_min_klas[art_c], ",", absbon_max_klas[art_c], "] der Baumart ",
+              sQuote(art), " => NA.")
+      hg <- unname(ifelse(bon < absbon_min_funk[art_c] |
+                            bon > absbon_max_funk[art_c], NA, hg))
+    }
   }
 
   return(hg)
@@ -353,12 +378,12 @@ funk_bonitieren <- function(art, alter, h, h_als_hg = FALSE, hoss = FALSE,
         if(isTRUE(kapp_na)){
           ekl[i] <- NA
           warning('Die Bestandesh\u00f6he ', h[i], ' im Alter ', alter[i],
-                  " ergibt eine Bonit\u00e4t au\u00dferhalb des Extrapolationsbereiches [-3,7].",
-                  " Da kapp_na=TRUE, wurde die Bonit\u00e4t auf NA gesetzt!")
+                  " ergibt eine Bonit\u00e4t au\u00dferhalb des Intervalls [-3,7].",
+                  " Da kapp_na=TRUE, wurde die Bonit\u00e4t auf NA gesetzt.")
         } else {
           warning('Die Bestandesh\u00f6he ', h[i], ' im Alter ', alter[i],
-                  " ergibt eine Bonit\u00e4t au\u00dferhalb des Extrapolationsbereiches [-3,7].",
-                  " Da kapp_na=FALSE, wurde die Bonit\u00e4t auf ", ekl[i], " gesetzt!")
+                  " ergibt eine Bonit\u00e4t au\u00dferhalb des Intervalls [-3,7].",
+                  " Da kapp_na=FALSE, wurde die Bonit\u00e4t auf ", ekl[i], " gesetzt.")
         }
       }
     }

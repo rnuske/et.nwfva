@@ -46,20 +46,16 @@ klas_bonitieren <- function(art, alter, hoehe, hoehe_typ="mittel",
   # * Höhe inter-/extrapolieren => Bonität
   # * Aufräumen
 
+  caller <-  sys.call(sys.parent())[[1]]
+
   if(missing(art) | missing(alter) | missing(hoehe))
     stop("art, alter und hoehe m\u00fcssen angegeben werden.")
   if(length(art) != 1 | length(alter) != 1 | length(hoehe) != 1)
     stop("art, alter und hoehe m\u00fcssen die L\u00e4nge 1 haben.")
-  if(alter < 5){
-    warning("alter ", sQuote(alter), " < 5. ",
-            "Keine klassische Bonitierung m\u00f6glich => NA.")
-    return(NA)
-  }
   art_c <- as.character(art_code(art))
-  if( alter > max_alter_klass[art_c] ){
-    warning("alter ", sQuote(alter), " > ", max_alter_klass[art_c],
-            " (max. zul\u00e4ssigem Alter der Baumart ", sQuote(art),
-            "). Keine klassische Bonitierung m\u00f6glich => NA.")
+  if(alter < 5 | alter > max_alter_klass[art_c]){
+    warning("alter ist au\u00dferhalb des Intervalls [5,", max_alter_klass[art_c],
+            "] der Baumart ", sQuote(art), " => NA.")
     return(NA)
   }
 
@@ -153,7 +149,7 @@ klas_bonitieren <- function(art, alter, hoehe, hoehe_typ="mittel",
   # Aufräumen
   #-----------------------------------------------------------------------------
 
-  # Warnungen, wenn extrapolierte Alter verwendet wurden
+  # Benachrichtigen, wenn extrapolierte Alter verwendet wurden
   if(!is.null(extpol_unten) | !is.null(extpol_oben) ){
     verw_eks <- if(exists("df_zwei")) df_zwei$Ekl else bon
 
@@ -176,15 +172,19 @@ klas_bonitieren <- function(art, alter, hoehe, hoehe_typ="mittel",
   # Ekl außerhalb von [-2,4] kappen bzw NA
   if(bon < -2 | bon > 4){
     if(isTRUE(kapp_na)){
-      warning('Die Bestandesh\u00f6he ', hoehe, ' im Alter ', alter,
-              " ergibt eine Bonit\u00e4t au\u00dferhalb des Extrapolationsbereiches [-2,4].",
-              " Da kapp_na=TRUE, wurde die Bonit\u00e4t auf NA gesetzt!")
       bon <- NA
+      if(caller == "klas_si2ekl"){
+        warning("Resultierende relative Bonit\u00e4t au\u00dferhalb des Intervalls [-2,4] => NA.")
+      } else {
+        warning('Die Bestandesh\u00f6he ', hoehe, ' im Alter ', alter,
+                " ergibt eine Bonit\u00e4t au\u00dferhalb des Intervalls [-2,4].",
+                " Da kapp_na=TRUE, wurde die Bonit\u00e4t auf NA gesetzt.")
+      }
     } else {
       bon <- ifelse(bon < -2, -2, 4)
       warning('Die Bestandesh\u00f6he ', hoehe, ' im Alter ', alter,
-              " ergibt eine Bonit\u00e4t au\u00dferhalb des Extrapolationsbereiches [-2,4].",
-              " Da kapp_na=FALSE, wurde die Bonit\u00e4t auf ", bon, " gesetzt!")
+              " ergibt eine Bonit\u00e4t au\u00dferhalb des Intervalls [-2,4].",
+              " Da kapp_na=FALSE, wurde die Bonit\u00e4t auf ", bon, " gesetzt.")
     }
   }
 
@@ -280,12 +280,11 @@ klas_tafel <- function(art, alter=NULL, bon=NULL, bon_typ="relativ"){
       # kleinste und größte Alter. In den Altersbereichen in denen nicht alle
       # benötigten Ekl Werte haben, muss extrapoliert werden.
 
-      if(alter < 5)
-        stop("alter muss gr\u00f6\u00dfer als 5 sein.")
       art_c <- as.character(art_code(art))
-      if(alter > max_alter_klass[art_c])
-        stop("alter muss kleiner als ", max_alter_klass[art_c],
-             " (max. zul\u00e4ssigem Alter der Baumart ", sQuote(art), ") sein.")
+      if(alter < 5 | alter > max_alter_klass[art_c]){
+        stop("alter ", sQuote(alter), " < 5 oder > ", max_alter_klass[art_c],
+             " (max. zul\u00e4ssigem Alter der Baumart ", sQuote(art), ".")
+        }
 
       # Alters Inter-/Extrapolation notwendig?
       df_alter <- et[et$Alter == alter, ]
@@ -461,15 +460,15 @@ klas_si2ekl <- function(art, si){
   if(any(length(art) > 1, length(si) > 1)){
     # mehrere
     df <- data.frame(art, hoehe=si)
-    ekl <- suppressWarnings(suppressMessages(
+    ekl <- suppressMessages(
       unlist(.mapply(klas_bonitieren, df,
                      MoreArgs=list(alter=100, hoehe_typ="ober", bon_typ="relativ", kapp_na=TRUE)))
-    ))
+    )
   } else {
     # einer
-    ekl <- suppressWarnings(suppressMessages(
+    ekl <- suppressMessages(
       klas_bonitieren(art, hoehe=si, alter=100, hoehe_typ="ober", bon_typ="relativ", kapp_na=TRUE)
-    ))
+    )
   }
 
   return(ekl)
@@ -527,18 +526,28 @@ klas_hoehe_skalar <- function(art, alter, bon, bon_typ, ht){
   art_c <- as.character(art_code(art))
 
   # Altersbereich
-  if(alter < 5 | alter > max_alter_klass[art_c])
+  art_c <- as.character(art_code(art))
+  if(alter < 5 | alter > max_alter_klass[art_c]){
+    warning("alter ist au\u00dferhalb des Intervalls [5,", max_alter_klass[art_c],
+            "] der Baumart ", sQuote(art), " => NA.")
     return(NA)
+  }
 
   # Bonitätsbereich (relativ)
-  if(bon_typ == "relativ" && (bon < -2 | bon > 4))
+  if(bon_typ == "relativ" && (bon < -2 | bon > 4)){
+    warning("Relative Bonit\u00e4t au\u00dferhalb des Intervalls [-2,4] => NA.")
     return(NA)
+  }
 
   # Umwandeln von abs in rel Bonität
   if(bon_typ == "absolut"){
     # Bonitätsbereich (absolut)
-    if(bon < absbon_min_klas[art_c] | bon > absbon_max_klas[art_c])
+    if(bon < absbon_min_klas[art_c] | bon > absbon_max_klas[art_c]){
+      warning("Absolute Bonit\u00e4t au\u00dferhalb des Intervalls [",
+              absbon_min_klas[art_c], ",", absbon_max_klas[art_c], "] der Baumart ",
+              sQuote(art), " => NA.")
       return(NA)
+    }
     bon <- klas_bonitieren(art, alter=100, hoehe=bon, hoehe_typ="ober", bon_typ="relativ")
   }
 

@@ -48,7 +48,7 @@ funk_si2ekl <- function(art, si) {
   } else if (length(si) == 1 & length(art) > 1) {
     si = rep(si, length(art))
   } else if (length(art) != length(si) & length(art) > 1 & length(si) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
 
   ekl = ifelse(art %in% c(110,111,112), (30 - si) / 3,
@@ -58,13 +58,14 @@ funk_si2ekl <- function(art, si) {
         ifelse(art == 711, (33 - si) / 4,
                NA)))))
   if (sum(art %in% c(110,111,112,211,511,611,711)) != length(art)) {
-    warning("Es wurden unbekannte Baumarten \u00fcbergeben!")  # never seen, art_code() stoppt vorher
+    warning("Es wurden unbekannte Baumarten \u00fcbergeben!", call.=FALSE)  # never seen, art_code() stoppt vorher
   }
 
   # Bonitätsbereich [-3,7] checken
   ekl <- ifelse(ekl < -3 | ekl > 7, NA, ekl)
   if(any(is.na(ekl)))
-    warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] => NA.")
+    warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] => NA.",
+            call.=FALSE)
 
   return(ekl)
 }
@@ -99,7 +100,7 @@ funk_ekl2si <- function(art, ekl) {
   } else if (length(ekl) == 1 & length(art) > 1) {
     ekl = rep(ekl, length(art))
   } else if (length(art) != length(ekl)) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
 
   si = ifelse(art %in% c(110,111,112), 30 - 3 * ekl,
@@ -109,13 +110,14 @@ funk_ekl2si <- function(art, ekl) {
        ifelse(art == 711, 33 - 4 * ekl,
               NA)))))
   if (sum(art %in% c(110,111,112,211,511,611,711)) != length(art)) {
-    warning("Es wurden unbekannte Baumarten \u00fcbergeben!") # never seen, art_code() stoppt vorher
+    warning("Es wurden unbekannte Baumarten \u00fcbergeben!", call.=FALSE) # never seen, art_code() stoppt vorher
   }
 
   # Bonitätsbereich [-3,7] checken
   si <- ifelse(ekl < -3 | ekl > 7, NA, si)
   if(any(is.na(si)))
-    warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] \u00fcbergeben => NA.")
+    warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] ",
+            "\u00fcbergeben => NA.", call.=FALSE)
 
   return(si)
 }
@@ -156,7 +158,7 @@ funk_h100 <- function(art, alter, bon, bon_als_ekl = FALSE, hoss = FALSE) {
     if (length(bon) == 1) bon = rep(bon, n.max)
   }
   if (length(art) != length(alter) | length(art) != length(bon) | length(alter) != length(bon)) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   if(hoss) message("Verwende das Hossfeld Modell.")
   art = sapply(art, art_code)
@@ -167,17 +169,18 @@ funk_h100 <- function(art, alter, bon, bon_als_ekl = FALSE, hoss = FALSE) {
          ifelse(art == 711, funk_h100_ki_wiedemann(alter, bon, bon_als_ekl, hoss),
                 NA)))))
   if (sum(art %in% c(110,111,112,211,511,611,711)) != length(art)) {
-    warning("Es wurden unbekannte Baumarten \u00fcbergeben!")  # never seen, art_code() stoppt vorher
+    warning("Es wurden unbekannte Baumarten \u00fcbergeben!", call.=FALSE)  # never seen, art_code() stoppt vorher
   }
   # Negative Alter führen zu NaN, es soll aber NA sein. Ja, so werden NaN gefunden.
   h100[is.na(h100)] <- NA
   if(any(is.na(h100)))
-    warning("alter ist nicht positiv => NA.")
+    warning("alter ist nicht positiv => NA.", call.=FALSE)
 
   # Bonitäten außerhalb des Extrapolationsbereichs [-3,7]
   if(bon_als_ekl){
     if(any(bon < -3 | bon > 7)){
-      warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] => NA.")
+      warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] ",
+              "=> NA.", call.=FALSE)
       h100 <- ifelse(bon < -3 | bon > 7, NA, h100)
     }
   } else {
@@ -186,7 +189,7 @@ funk_h100 <- function(art, alter, bon, bon_als_ekl = FALSE, hoss = FALSE) {
     if(any(bon < absbon_min_funk[art_c] | bon > absbon_max_funk[art_c])){
       warning("Absolute Bonit\u00e4t au\u00dferhalb des Intervalls [",
               absbon_min_funk[art_c], ",", absbon_max_funk[art_c], "] der Baumart ",
-              sQuote(art), " => NA.")
+              sQuote(art), " => NA.", call.=FALSE)
       h100 <- unname(ifelse(bon < absbon_min_funk[art_c] |
                               bon > absbon_max_funk[art_c], NA, h100))
     }
@@ -228,7 +231,7 @@ funk_hg <- function(art, alter, bon, bon_als_ekl = FALSE) {
     if (length(bon) == 1) bon = rep(bon, n.max)
   }
   if (length(art) != length(alter) | length(art) != length(bon) | length(alter) != length(bon)) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   art = sapply(art, art_code)
   hg = ifelse(art %in% c(110,111,112) , funk_hg_ei_juettner(alter, bon, bon_als_ekl),
@@ -238,19 +241,20 @@ funk_hg <- function(art, alter, bon, bon_als_ekl = FALSE) {
        ifelse(art == 711, funk_hg_ki_wiedemann(alter, bon, bon_als_ekl),
               NA)))))
   if (sum(art %in% c(110,111,112,211,511,611,711)) != length(art)) {
-    warning("Es wurden unbekannte Baumarten \u00fcbergeben!") # never seen, art_code() stoppt vorher
+    warning("Es wurden unbekannte Baumarten \u00fcbergeben!", call.=FALSE) # never seen, art_code() stoppt vorher
   }
 
   # Negative Alter führen zu NaN, es soll aber NA sein
   hg[is.na(hg)] <- NA
   if(any(is.na(hg)))
-    warning("alter ist nicht positiv => NA.")
+    warning("alter ist nicht positiv => NA.", call.=FALSE)
 
 
   # Bonitäten außerhalb des Extrapolationsbereichs [-3,7]
   if(bon_als_ekl){
     if(any(bon < -3 | bon > 7)){
-      warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] => NA.")
+      warning("Relative Bonit\u00e4ten au\u00dferhalb des Intervalls [-3,7] ",
+              "=> NA.", call.=FALSE)
       hg <- ifelse(bon < -3 | bon >  7, NA, hg)
     }
   } else {
@@ -259,7 +263,7 @@ funk_hg <- function(art, alter, bon, bon_als_ekl = FALSE) {
     if(any(bon < absbon_min_funk[art_c] | bon > absbon_max_funk[art_c])){
       warning("Absolute Bonit\u00e4t au\u00dferhalb des Intervalls [",
               absbon_min_klas[art_c], ",", absbon_max_klas[art_c], "] der Baumart ",
-              sQuote(art), " => NA.")
+              sQuote(art), " => NA.", call.=FALSE)
       hg <- unname(ifelse(bon < absbon_min_funk[art_c] |
                             bon > absbon_max_funk[art_c], NA, hg))
     }
@@ -339,7 +343,7 @@ funk_bonitieren <- function(art, alter, h, h_als_hg = FALSE, hoss = FALSE,
     if (length(h) == 1) h = rep(h, n)
   }
   if (length(art) != length(alter) | length(art) != length(h) | length(alter) != length(h)) {
-    stop('Die \u00fcbergebenen Vektoren sind unterschiedlich lang!')
+    stop('Die \u00fcbergebenen Vektoren sind unterschiedlich lang!', call.=FALSE)
   }
 
   if(hoss) message("Verwende das Hossfeld Modell.")
@@ -349,7 +353,7 @@ funk_bonitieren <- function(art, alter, h, h_als_hg = FALSE, hoss = FALSE,
 
   for (i in 1:length(art)) {
     if (!(art[i] %in% c(110,111,112,211,511,611,711))) {
-      warning('Unbekannte Baumart!')  # never seen, art_code() stoppt vorher
+      warning('Unbekannte Baumart!', call.=FALSE)  # never seen, art_code() stoppt vorher
     } else if (alter[i] > 0) {
       df <-  data.frame(ekl = seq(7, -3, by =-0.01))
 
@@ -379,11 +383,13 @@ funk_bonitieren <- function(art, alter, h, h_als_hg = FALSE, hoss = FALSE,
           ekl[i] <- NA
           warning('Die Bestandesh\u00f6he ', h[i], ' im Alter ', alter[i],
                   " ergibt eine Bonit\u00e4t au\u00dferhalb des Intervalls [-3,7].",
-                  " Da kapp_na=TRUE, wurde die Bonit\u00e4t auf NA gesetzt.")
+                  " Da kapp_na=TRUE, wurde die Bonit\u00e4t auf NA gesetzt.",
+                  call.=FALSE)
         } else {
           warning('Die Bestandesh\u00f6he ', h[i], ' im Alter ', alter[i],
                   " ergibt eine Bonit\u00e4t au\u00dferhalb des Intervalls [-3,7].",
-                  " Da kapp_na=FALSE, wurde die Bonit\u00e4t auf ", ekl[i], " gesetzt.")
+                  " Da kapp_na=FALSE, wurde die Bonit\u00e4t auf ", ekl[i], " gesetzt.",
+                  call.=FALSE)
         }
       }
     }
@@ -407,7 +413,7 @@ funk_si2ekl_intern <- function(art, si) {
   } else if (length(si) == 1 & length(art) > 1) {
     si = rep(si, length(art))
   } else if (length(art) != length(si) & length(art) > 1 & length(si) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
 
   ekl = ifelse(art %in% c(110,111,112), (31.18178 - si) / 3.54286,
@@ -417,7 +423,7 @@ funk_si2ekl_intern <- function(art, si) {
         ifelse(art == 711, (33.00531 - si) / 3.88125,
                NA)))))
   if (sum(art %in% c(110,111,112,211,511,611,711)) != length(art)) {
-    warning("Es wurden unbekannte Baumarten \u00fcbergeben!")  # never seen, art_code() stoppt vorher
+    warning("Es wurden unbekannte Baumarten \u00fcbergeben!", call.=FALSE)  # never seen, art_code() stoppt vorher
   }
   return(ekl)
 }
@@ -430,7 +436,7 @@ funk_ekl2si_intern <- function(art, ekl) {
   } else if (length(ekl) == 1 & length(art) > 1) {
     ekl = rep(ekl, length(art))
   } else if (length(art) != length(ekl)) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
 
   si = ifelse(art %in% c(110,111,112), 31.18178 - 3.54286 * ekl,
@@ -440,7 +446,7 @@ funk_ekl2si_intern <- function(art, ekl) {
        ifelse(art == 711, 33.00531 - 3.88125 * ekl,
               NA)))))
   if (sum(art %in% c(110,111,112,211,511,611,711)) != length(art)) {
-    warning("Es wurden unbekannte Baumarten \u00fcbergeben!") # never seen, art_code() stoppt vorher
+    warning("Es wurden unbekannte Baumarten \u00fcbergeben!", call.=FALSE) # never seen, art_code() stoppt vorher
   }
   return(si)
 }
@@ -448,7 +454,7 @@ funk_ekl2si_intern <- function(art, ekl) {
 
 funk_h100_ei_juettner <- function(alter, bon, bon_als_ekl = FALSE) {
   if (length(bon) != length(alter) & length(bon) > 1 & length(alter) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   if (bon_als_ekl == TRUE) {
     si = funk_ekl2si(110, bon); ekl = funk_si2ekl_intern(110, si)
@@ -464,7 +470,7 @@ funk_h100_ei_juettner <- function(alter, bon, bon_als_ekl = FALSE) {
 
 funk_hg_ei_juettner <- function(alter, bon, bon_als_ekl = FALSE) {
   if (length(bon) != length(alter) & length(bon) > 1 & length(alter) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   si = if (bon_als_ekl == TRUE) funk_ekl2si(110, bon) else bon
   hg.100 = 0.15295 + 0.96484 * si
@@ -477,7 +483,7 @@ funk_hg_ei_juettner <- function(alter, bon, bon_als_ekl = FALSE) {
 
 funk_h100_bu_schober <- function(alter, bon, bon_als_ekl = FALSE, hoss = FALSE) {
   if (length(bon) != length(alter) & length(bon) > 1 & length(alter) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   if (bon_als_ekl == TRUE) {
     si = funk_ekl2si(211, bon); ekl = funk_si2ekl_intern(211, si)
@@ -499,7 +505,7 @@ funk_h100_bu_schober <- function(alter, bon, bon_als_ekl = FALSE, hoss = FALSE) 
 
 funk_hg_bu_schober <- function(alter, bon, bon_als_ekl = FALSE) {
   if (length(bon) != length(alter) & length(bon) > 1 & length(alter) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   si = if (bon_als_ekl == TRUE) funk_ekl2si(211, bon) else bon
   hg.100 = -0.44875 + 0.96094 * si
@@ -512,7 +518,7 @@ funk_hg_bu_schober <- function(alter, bon, bon_als_ekl = FALSE) {
 
 funk_h100_fi_wiedemann <- function(alter, bon, bon_als_ekl = FALSE, hoss = FALSE) {
   if (length(bon) != length(alter) & length(bon) > 1 & length(alter) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   if (bon_als_ekl == TRUE) {
     si = funk_ekl2si(511, bon); ekl = funk_si2ekl_intern(511, si)
@@ -534,7 +540,7 @@ funk_h100_fi_wiedemann <- function(alter, bon, bon_als_ekl = FALSE, hoss = FALSE
 
 funk_hg_fi_wiedemann <- function(alter, bon, bon_als_ekl = FALSE) {
   if (length(bon) != length(alter) & length(bon) > 1 & length(alter) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   si = if (bon_als_ekl == TRUE) funk_ekl2si(511, bon) else bon
   hg.100 = -0.74618 + 0.99110 * si
@@ -547,7 +553,7 @@ funk_hg_fi_wiedemann <- function(alter, bon, bon_als_ekl = FALSE) {
 
 funk_h100_dgl_bergel <- function(alter, bon, bon_als_ekl = FALSE, hoss = FALSE) {
   if (length(bon) != length(alter) & length(bon) > 1 & length(alter) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   if (bon_als_ekl == TRUE) {
     si = funk_ekl2si(611, bon); ekl = funk_si2ekl_intern(611, si)
@@ -569,7 +575,7 @@ funk_h100_dgl_bergel <- function(alter, bon, bon_als_ekl = FALSE, hoss = FALSE) 
 
 funk_hg_dgl_bergel <- function(alter, bon, bon_als_ekl = FALSE) {
   if (length(bon) != length(alter) & length(bon) > 1 & length(alter) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   si = if (bon_als_ekl == TRUE) funk_ekl2si(611, bon) else bon
   hg.100 = -1.28622 + 0.97104 * si
@@ -582,7 +588,7 @@ funk_hg_dgl_bergel <- function(alter, bon, bon_als_ekl = FALSE) {
 
 funk_h100_ki_wiedemann <- function(alter, bon, bon_als_ekl = FALSE, hoss = FALSE) {
   if (length(bon) != length(alter) & length(bon) > 1 & length(alter) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   if (bon_als_ekl == TRUE) {
     si = funk_ekl2si(711, bon); ekl = funk_si2ekl_intern(711, si)
@@ -603,7 +609,7 @@ funk_h100_ki_wiedemann <- function(alter, bon, bon_als_ekl = FALSE, hoss = FALSE
 
 funk_hg_ki_wiedemann <- function(alter, bon, bon_als_ekl = FALSE) {
   if (length(bon) != length(alter) & length(bon) > 1 & length(alter) > 1) {
-    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!")
+    stop("Die \u00fcbergebenen Vektoren sind unterschiedlich lang!", call.=FALSE)
   }
   si = if (bon_als_ekl == TRUE) funk_ekl2si(711, bon) else bon
   hg.100 = -1.34798 + 1.00400 * si

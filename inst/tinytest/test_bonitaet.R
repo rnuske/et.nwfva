@@ -35,6 +35,9 @@ expect_error(et_bonitaet(211, alter=80, hoehe=35, kapp_na=c(TRUE, TRUE, FALSE)))
 # Baumartencode als character übergeben
 expect_equal(et_bonitaet("111", alter=40, hoehe=20), -0.4)
 
+# Alter als Fließkommazahl
+expect_error(et_bonitaet(111, alter=40.4, hoehe=20))
+
 
 #===============================================================================
 #  Testet die funktionalisierte Inter-/Extrapolation (funk_bonitieren)

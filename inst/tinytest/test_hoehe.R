@@ -16,6 +16,9 @@ expect_error(et_hoehe(511, alter=80, bon=TRUE))
 # Baumartencode als character übergeben
 expect_equal(et_hoehe("511", alter=80, bon=1.5), 29.7)
 
+# Alter als Fließkommazahl
+expect_error(et_hoehe(511, alter=80.1, bon=1.5))
+
 
 #===============================================================================
 #  Testet die funktionalisierte Inter-/Extrapolation

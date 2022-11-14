@@ -17,11 +17,11 @@ et_tafel(
 lateinischer Name oder in niedersächsischer Kodierung.
 Für vorhandene Arten siehe \code{\link[=et_liste]{et_liste()}}.}
 
-\item{alter}{Bestandesalter in Jahren als Zahlwert (optional). Zwischen 5
+\item{alter}{Bestandesalter in Jahren als ganze Zahl (optional). Zwischen 5
 und max. zulässigem Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160).}
 
-\item{bon}{Ertragsklasse als Zahlwert (optional).  Bei Methode \code{"klassisch"}
-im Interval [-2,4].}
+\item{bon}{Ertragsklasse als Zahl (optional). Bei Methode \code{"klassisch"} im
+Interval [-2,4].}
 
 \item{bon_typ}{Die Bonität kann als relative Ertragsklasse (\code{"relativ"}) oder
 absolute Oberhöhenbonität (H100 im Alter 100, \code{"absolut"}) angegeben werden.

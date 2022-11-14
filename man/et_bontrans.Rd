@@ -11,7 +11,7 @@ et_bontrans(art, bon, richtung = "abs_zu_rel", methode = "funktional")
 lateinischer Name oder in niedersächsischer Kodierung.
 Für vorhandene Arten siehe \code{\link[=et_liste]{et_liste()}}.}
 
-\item{bon}{Bonität als Zahlwert. Zulässig sind relative Ertragsklassen im
+\item{bon}{Bonität als Zahl. Zulässig sind relative Ertragsklassen im
 Interval [-2,4] bzw. [-3,7] bei Methode \code{"klassisch"} bzw.
 \code{"funktional"} und absolute Bonitäten entsprechend. Welche Art der
 Ausgangs-Bonität hier übergeben wird bestimmt der Parameter \code{richtung}.}

@@ -34,6 +34,9 @@ expect_error(et_tafel(art=c("Dgl", "Bu"), alter=37, bon=1))
 expect_error(et_tafel(711, alter=37:40, bon=1))
 expect_error(et_tafel(211, alter=37, bon=1:3))
 
+# Alter als Fließkommazahl
+expect_error(et_tafel(211, alter=37.7, bon=1))
+
 
 #===============================================================================
 #  Testet die klassische Inter-/Extrapolation mittels Dreisatz

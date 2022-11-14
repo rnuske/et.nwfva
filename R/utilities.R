@@ -50,3 +50,11 @@ art_code <- function(species){
   }
   return(species)
 }
+
+
+# Testet ob ein Zahl ganzzahlig ist (mit Toleranz für numerische Probleme)
+# zusätzlich is.numeric, um gegen TRUE abzusichern
+# Basis ist von ?is.integer
+is.wholenumber <- function(x, tol=.Machine$double.eps^0.5){
+  is.numeric(x) && all(abs(x - round(x)) < tol)
+}

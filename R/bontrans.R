@@ -20,7 +20,7 @@
 #' @param art Baumartenbezeichnung entweder als Kürzel, deutscher Name,
 #'   lateinischer Name oder in niedersächsischer Kodierung.
 #'   Für vorhandene Arten siehe [et_liste()].
-#' @param bon Bonität als Zahlwert. Zulässig sind relative Ertragsklassen im
+#' @param bon Bonität als Zahl. Zulässig sind relative Ertragsklassen im
 #'   Interval \[-2,4\] bzw. \[-3,7\] bei Methode `"klassisch"` bzw.
 #'   `"funktional"` und absolute Bonitäten entsprechend. Welche Art der
 #'   Ausgangs-Bonität hier übergeben wird bestimmt der Parameter `richtung`.

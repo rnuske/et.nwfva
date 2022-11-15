@@ -46,7 +46,7 @@ klas_bonitieren <- function(art, alter, hoehe, hoehe_typ="mittel",
   # * Höhe inter-/extrapolieren => Bonität
   # * Aufräumen
 
-  caller <-  sys.call(sys.parent())[[1]]
+  caller <-  sys.call(sys.parent(2))[[1]]
 
   if(missing(art) | missing(alter) | missing(hoehe))
     stop("art, alter und hoehe m\u00fcssen angegeben werden.", call.=FALSE)
@@ -173,14 +173,14 @@ klas_bonitieren <- function(art, alter, hoehe, hoehe_typ="mittel",
   if(bon < -2 | bon > 4){
     if(isTRUE(kapp_na)){
       bon <- NA
-      if(caller == "klas_si2ekl"){
-        warning("Resultierende relative Bonit\u00e4t au\u00dferhalb ",
-                "des Intervalls [-2,4] => NA.", call.=FALSE)
-      } else {
+      if(caller == "et_bonitaet"){
         warning('Die Bestandesh\u00f6he ', hoehe, ' im Alter ', alter,
                 " ergibt eine Bonit\u00e4t au\u00dferhalb des Intervalls [-2,4].",
                 " Da kapp_na=TRUE, wurde die Bonit\u00e4t auf NA gesetzt.",
                 call.=FALSE)
+      } else {
+        warning("Resultierende relative Bonit\u00e4t au\u00dferhalb ",
+                "des Intervalls [-2,4] => NA.", call.=FALSE)
       }
     } else {
       bon <- ifelse(bon < -2, -2, 4)

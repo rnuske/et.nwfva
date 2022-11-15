@@ -68,7 +68,6 @@ plotte_bonfaecher <- function(art, hoehe_typ, max_alter=170, step_alter=5, ekls=
 library(et.nwfva)
 ```
 
-
 # et.nwfva
 
 <!-- badges: start -->

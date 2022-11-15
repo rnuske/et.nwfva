@@ -112,9 +112,8 @@ et_bonitaet("Kiefer", alter=120, hoehe=45, hoehe_typ="ober", methode="klassisch"
 
 # Anfrage außerhalb des zulässigen Bonitätsbereichs
 et_bonitaet("Kiefer", alter=70, hoehe=40, hoehe_typ="ober")
-#> Warning in funk_bonitieren(art, alter, h = hoehe, h_als_hg = isTRUE(hoehe_typ == : Die
-#> Bestandeshöhe 40 im Alter 70 ergibt eine Bonität außerhalb des Extrapolationsbereiches
-#> [-3,7]. Da kapp_na=TRUE, wurde die Bonität auf NA gesetzt!
+#> Warning: Die Bestandeshöhe 40 im Alter 70 ergibt eine Bonität außerhalb des Intervalls
+#> [-3,7]. Da kapp_na=TRUE, wurde die Bonität auf NA gesetzt.
 #> [1] NA
 ```
 

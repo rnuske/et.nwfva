@@ -262,7 +262,7 @@ funk_hg <- function(art, alter, bon, bon_als_ekl = FALSE) {
     art_c <- as.character(art)
     if(any(bon < absbon_min_funk[art_c] | bon > absbon_max_funk[art_c])){
       warning("Absolute Bonit\u00e4t au\u00dferhalb des Intervalls [",
-              absbon_min_klas[art_c], ",", absbon_max_klas[art_c], "] der Baumart ",
+              absbon_min_funk[art_c], ",", absbon_max_funk[art_c], "] der Baumart ",
               sQuote(art), " => NA.", call.=FALSE)
       hg <- unname(ifelse(bon < absbon_min_funk[art_c] |
                             bon > absbon_max_funk[art_c], NA, hg))

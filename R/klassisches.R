@@ -54,7 +54,7 @@ klas_bonitieren <- function(art, alter, hoehe, hoehe_typ="mittel",
     stop("art, alter und hoehe m\u00fcssen die L\u00e4nge 1 haben.", call.=FALSE)
   art_c <- as.character(art_code(art))
   if(alter < 5 | alter > max_alter_klass[art_c]){
-    warning("alter ist au\u00dferhalb des Intervalls [5,", max_alter_klass[art_c],
+    warning("alter au\u00dferhalb des Intervalls [5,", max_alter_klass[art_c],
             "] der Baumart ", sQuote(art), " => NA.", call.=FALSE)
     return(NA)
   }
@@ -256,9 +256,12 @@ klas_tafel <- function(art, alter=NULL, bon=NULL, bon_typ="relativ"){
     if(bon_typ == "absolut"){
       art_c <- as.character(art_code(art))
       if(bon < absbon_min_klas[art_c] | bon > absbon_max_klas[art_c])
-        stop("Absolute Bonit\u00e4t muss im Intervall [-2,4] sein.", call.=FALSE)
+        stop("Absolute Bonit\u00e4t muss f\u00fcr Baumart ", sQuote(art),
+             " im Intervall [", absbon_min_klas[art_c], ",",
+             absbon_max_klas[art_c], "] sein.", call.=FALSE)
 
-      bon <- klas_bonitieren(art, alter=100, hoehe=bon, hoehe_typ="ober", bon_typ="relativ")
+      bon <- suppressMessages(
+        klas_bonitieren(art, alter=100, hoehe=bon, hoehe_typ="ober", bon_typ="relativ"))
     }
   }
 
@@ -285,9 +288,8 @@ klas_tafel <- function(art, alter=NULL, bon=NULL, bon_typ="relativ"){
 
       art_c <- as.character(art_code(art))
       if(alter < 5 | alter > max_alter_klass[art_c]){
-        stop("alter ", sQuote(alter), " < 5 oder > ", max_alter_klass[art_c],
-             " (max. zul\u00e4ssigem Alter der Baumart ", sQuote(art), ".",
-             call.=FALSE)
+        stop("alter muss >= 5 und f\u00fcr Baumart ", sQuote(art), " <= ",
+             max_alter_klass[art_c], " sein.", call.=FALSE)
         }
 
       # Alters Inter-/Extrapolation notwendig?
@@ -532,7 +534,7 @@ klas_hoehe_skalar <- function(art, alter, bon, bon_typ, ht){
   # Altersbereich
   art_c <- as.character(art_code(art))
   if(alter < 5 | alter > max_alter_klass[art_c]){
-    warning("alter ist au\u00dferhalb des Intervalls [5,", max_alter_klass[art_c],
+    warning("alter au\u00dferhalb des Intervalls [5,", max_alter_klass[art_c],
             "] der Baumart ", sQuote(art), " => NA.", call.=FALSE)
     return(NA)
   }

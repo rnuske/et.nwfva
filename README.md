@@ -7,7 +7,10 @@
 
 [![R-CMD-check](https://github.com/rnuske/et.nwfva/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rnuske/et.nwfva/actions/workflows/R-CMD-check.yaml)
 [![Package-License](https://img.shields.io/badge/license-GPL--2-brightgreen.svg?style=flat)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![CRAN](https://www.r-pkg.org/badges/version/et.nwfva)](https://cran.r-project.org/package=et.nwfva)
+[![Dependencies](https://tinyverse.netlify.com/badge/et.nwfva)](https://cran.r-project.org/package=et.nwfva)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7207596.svg)](https://doi.org/10.5281/zenodo.7207596)
+
 <!-- badges: end -->
 
 Die neuen Ertragstafeln der NW-FVA (Albert et al. 2021) bieten für die
@@ -32,8 +35,14 @@ Dgl, Ki 160) beschränkt.
 ## Installation
 
 Die aktuelle Version des Paketes kann für die gängigen Betriebssysteme
-(Windows, Linux, macOS) aus dem [R-Universe der
-NW-FVA](https://nw-fva.r-universe.dev) installiert werden.
+(Windows, Linux, macOS) von CRAN
+
+``` r
+install.packages("et.nwfva")
+```
+
+und aus dem [R-Universe der NW-FVA](https://nw-fva.r-universe.dev)
+installiert werden.
 
 ``` r
 # NW-FVA Universe in R bekannt machen

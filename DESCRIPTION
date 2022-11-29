@@ -25,7 +25,7 @@ Description: The new yield tables developed by the Northwest German Forest
   the rule of proportion or with a functional approach.
 Depends: R (>= 3.5)
 Suggests: knitr, rmarkdown, tinytest
-License: GPL (>= 2)
+License: MIT + file LICENSE
 URL: https://github.com/rnuske/et.nwfva
 BugReports: https://github.com/rnuske/et.nwfva/issues
 Encoding: UTF-8

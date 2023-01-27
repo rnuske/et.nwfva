@@ -16,14 +16,19 @@
 #' Berechnung erfolgt entweder über einen funktionalisierten Bonitätsfächer oder
 #' über Inter-/Extrapolation der Ertragstafeln mittels Dreisatz.
 #'
-#' Die Bestimmung der Bestandeshöhe über die funktionalisierten Bonitätsfächer
-#' basiert auf nichtlinearen Modellen, die durch Anpassung an die Ober- und
-#' Mittelhöhen über dem Alter bei mäßiger Durchforstung bzw. für
-#' Eichen-Oberhöhen bei starker Durchforstung aus der Ertragstafelsammlung von
-#' Schober (1995) entstanden. Für die Kiefer wurde hierbei die
-#' Chapman-Richards-Funktion (Richards 1959) und für alle anderen Baumarten die
-#' Wachstumsfunktion von Sloboda (1971) genutzt. Die Bestandeshöhen der neuen
-#' Ertragstafeln (Albert et al. 2021) sind die tabellarisierten Werte eben
+#' Die Ermittlung der Bestandesoberhöhe mithilfe der funktionalisierten
+#' Bonitätsfächer basiert auf nichtlinearen Modellen, die durch Anpassung an die
+#' alters- und bonitätsabhängigen Oberhöhenverläufe bei mäßiger bzw. für Eiche
+#' bei starker Durchforstung gemäß der Ertragstafelsammlung von Schober (1995)
+#' entwickelt wurden. Für die Kiefer wurde hierbei die Chapman-Richards-Funktion
+#' (Richards 1959) und für alle anderen Baumarten die Wachstumsfunktion von
+#' Sloboda (1971) genutzt, jeweils in der algebraischen Differenzenform. Die
+#' Bonitätsfächermodelle der Bestandesmittelhöhen ergaben sich durch
+#' Modellierung der Relationen der Mittel- und Oberhöhen in den den neuen
+#' Ertragstafel zugrundeliegenden Simulationsbeständen (s. Vignette "Hinweise
+#' zum Geleit") und funktionalen Ausgleich der resultierenden Mittelhöhen mit
+#' den oben genannten Funktionstypen. Die Bestandesober- und -mittelhöhen der
+#' neuen Ertragstafeln (Albert et al. 2021) sind die tabellarisierten Werte eben
 #' dieser funktionalisierten Bonitätsfächer.
 #'
 #' Der entscheidende Vorteil der Bonitätsfächermodelle gegenüber dem klassischen

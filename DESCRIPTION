@@ -31,6 +31,6 @@ BugReports: https://github.com/rnuske/et.nwfva/issues
 Encoding: UTF-8
 Language: de
 NeedsCompilation: no
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

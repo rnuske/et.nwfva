@@ -130,9 +130,18 @@ et_bonitaet <- function(art, alter, hoehe,
 
   if(missing(art) | missing(alter) | missing(hoehe))
     stop("art, alter und hoehe m\u00fcssen angegeben werden.")
-  if(!is.wholenumber(alter))
+  l <- c(length(art), length(alter), length(hoehe))
+  if(any(l == 0))
+    stop("art, alter und hoehe k\u00f6nnen nicht NULL sein")
+  if(length(unique(l[l != 1])) > 1)
+    stop("Die L\u00e4nge von art, alter und hoehe muss gleich oder eins sein")
+  d <- data.frame(art, alter, hoehe)
+  bon <- rep(NA, nrow(d))
+  na <- is.na(d$art) | is.na(d$alter) | is.na(d$hoehe)
+  d <- d[!na, ]
+  if(!is.wholenumber(d$alter))
     stop("alter muss ganzzahlig sein.")
-  if(!is.numeric(hoehe))
+  if(!is.numeric(d$hoehe))
     stop("hoehe muss numerisch sein.")
   hoehe_typ <- match.arg(hoehe_typ, c("mittel", "ober"))
   bon_typ <- match.arg(bon_typ, c("relativ", "absolut"))
@@ -149,12 +158,12 @@ et_bonitaet <- function(art, alter, hoehe,
       } else { stop("Unbekannte Parameter in ... \u00fcbergeben.") }
     } else { hoss <- FALSE }
 
-    bon <- funk_bonitieren(art, alter, h=hoehe,
-                           h_als_hg=isTRUE(hoehe_typ == "mittel"), hoss, bon_typ, kapp_na)
+    bon[!na] <- funk_bonitieren(d$art, d$alter, h=d$hoehe,
+                                h_als_hg=isTRUE(hoehe_typ == "mittel"), hoss, bon_typ, kapp_na)
   } else {
     # klassisch
-    df <- data.frame(art, alter, hoehe, hoehe_typ, bon_typ, kapp_na)
-    bon <- unlist(.mapply(klas_bonitieren, df, NULL))
+    df <- data.frame("art" = d$art, "alter" = d$alter, "hoehe" = d$hoehe, hoehe_typ, bon_typ, kapp_na)
+    bon[!na] <- unlist(.mapply(klas_bonitieren, df, NULL))
   }
   return(round(bon, 1))
 }

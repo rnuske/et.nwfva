@@ -123,9 +123,18 @@ et_hoehe <- function(art, alter, bon, bon_typ="relativ",
 
   if(missing(art) | missing(alter) | missing(bon))
     stop("art, alter und bon m\u00fcssen angegeben werden.")
-  if(!is.wholenumber(alter))
+  l <- c(length(art), length(alter), length(bon))
+  if(any(l == 0))
+    stop("art, alter und bon k\u00f6nnen nicht NULL sein")
+  if(length(unique(l[l != 1])) > 1)
+    stop("Die L\u00e4nge von art, alter und bon muss gleich oder eins sein")
+  d <- data.frame(art, alter, bon)
+  h <- rep(NA, nrow(d))
+  na <- is.na(d$art) | is.na(d$alter) | is.na(d$bon)
+  d <- d[!na, ]
+  if(!is.wholenumber(d$alter))
     stop("alter muss ganzzahlig sein.")
-  if(!is.numeric(bon))
+  if(!is.numeric(d$bon))
     stop("bon muss numerisch sein.")
   bon_typ <- match.arg(bon_typ, c("relativ", "absolut"))
   hoehe_typ <- match.arg(hoehe_typ, c("mittel", "ober"))
@@ -134,8 +143,8 @@ et_hoehe <- function(art, alter, bon, bon_typ="relativ",
   if(methode == "funktional"){
 
     if(hoehe_typ == "mittel"){
-      h <- funk_hg(art, alter, bon,
-                   bon_als_ekl=isTRUE(bon_typ == "relativ"))
+      h[!na] <- funk_hg(d$art, d$alter, d$bon,
+                        bon_als_ekl=isTRUE(bon_typ == "relativ"))
     } else { # ober
 
       # behandle dot-dot-dot auf der Suche nach hoss
@@ -146,11 +155,11 @@ et_hoehe <- function(art, alter, bon, bon_typ="relativ",
         } else { stop("Unbekannte Parameter in ... \u00fcbergeben.") }
       } else { hoss <- FALSE }
 
-      h <- funk_h100(art, alter, bon,
-                     bon_als_ekl=isTRUE(bon_typ == "relativ"), hoss)
+      h[!na] <- funk_h100(d$art, d$alter, d$bon,
+                          bon_als_ekl=isTRUE(bon_typ == "relativ"), hoss)
     }
   } else { # klassisch
-    h <- klas_hoehe(art, alter, bon, bon_typ, hoehe_typ)
+    h[!na] <- klas_hoehe(d$art, d$alter, d$bon, bon_typ, hoehe_typ)
   }
   return(round(h, 1))
 }

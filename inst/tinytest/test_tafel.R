@@ -335,3 +335,11 @@ expect_error(et_tafel(711, alter=50, bon=15.4, bon_typ='abs'))
 # außerhalb des Altersbereichs [5,160]
 expect_error(et_tafel(611, alter=4, bon=1))
 expect_error(et_tafel(611, alter=161, bon=1))
+
+
+# Test nach Issues -------------------------------------------------------------
+# Issue #6
+# Frage ich aber nach der Bonität 0.5 bekomme ich diese Bonität nur bis Alter 75,
+# danach (Bonität 0 geht bis 95 und Bonität 1 bis 110) danach bekomme ich Werte
+# für Bonität 1.5 und 2.5.
+expect_equal(unique(et_tafel(511, bon=0.5)$Ekl), 0.5)

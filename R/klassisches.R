@@ -368,6 +368,14 @@ klas_tafel <- function(art, alter=NULL, bon=NULL, bon_typ="relativ"){
         ek_dist <- abs(et[, 'Ekl'] - bon)
         df_zwei <- et[ek_dist <= sort(unique(ek_dist))[2], ]
         eks <- unique(df_zwei[, 'Ekl'])
+        if(length(eks) > 2){
+          # wenn bon genau zwischen zwei Ekl liegt, gibt es nicht 2
+          # (kürzere und längere) Distanzen zu den benachbarten Ekl, sondern
+          # exakt 1 Distanz, die sowohl die untere als auch obere Ekl einschließt.
+          # Damit nicht zuviele Ekls in df_zwei landen, 1. Distanz als cut off.
+          df_zwei <- et[ek_dist <= sort(unique(ek_dist))[1], ]
+          eks <- unique(df_zwei[, 'Ekl'])
+        }
         ratio <- (bon - eks[1]) / (eks[2] - eks[1])
         out <- as.data.frame(do.call(rbind, by(df_zwei, df_zwei$Alter,
                      FUN=function(x){

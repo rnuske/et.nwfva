@@ -1,6 +1,6 @@
 Package: et.nwfva
 Title: Forest Yield Tables for Northwest Germany and their Application
-Version: 0.1.1.900
+Version: 0.1.1.901
 Authors@R: c(
   person("Robert", "Nuske", role=c("aut", "cre"), 
          email="robert.nuske@mailbox.org", 

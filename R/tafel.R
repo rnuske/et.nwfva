@@ -23,8 +23,9 @@
 #'   Für vorhandene Arten siehe [et_liste()].
 #' @param alter Bestandesalter in Jahren als ganze Zahl (optional). Zwischen 5
 #'   und max. zulässigem Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160).
-#' @param bon Ertragsklasse als Zahl (optional). Bei Methode `"klassisch"` im
-#'   Interval \[-2,4\].
+#' @param bon Ertragsklasse als Zahl (optional). Wird vor der Berechnung auf die
+#'   Genauigkeit der Ausgabe (eine Nachkommastelle) gerundet. Bei Methode
+#'   `"klassisch"` im Interval \[-2,4\].
 #' @param bon_typ Die Bonität kann als relative Ertragsklasse (`"relativ"`) oder
 #'   absolute Oberhöhenbonität (H100 im Alter 100, `"absolut"`) angegeben werden.
 #'   Parameter kann gekürzt werden, solange er eindeutig bleibt.
@@ -34,7 +35,9 @@
 #'
 #' @return Ein Dataframe mit den Spalten `Ekl`, `Alter`,
 #'   `N`, `Hg`, `H100`, `G`, `Dg`, `Dw`, `V`, `N_aus`, `G_aus`, `Dg_aus`,
-#'   `V_aus`, `iV`, `GWL`, `dGZ`.
+#'   `V_aus`, `iV`, `GWL`, `dGZ`. Die Anzahlen `N` und `N_aus` werden auf
+#'   ganze Zahlen und die übrigen Parameter auf eine Nachkommastelle gerundet
+#'   ausgegeben.
 #'
 #'  \tabular{ll}{
 #'    \strong{Kürzel} \tab \strong{Beschreibung}\cr
@@ -86,8 +89,16 @@ et_tafel <- function(art, alter=NULL, bon=NULL, bon_typ="relativ",
          "Alle Parameter m\u00fcssen die L\u00e4nge 1 haben.")
   if(!is.null(alter) && !is.wholenumber(alter))
     stop("alter muss NULL oder ganzzahlig sein.")
-  if(!is.null(bon) && !is.numeric(bon))
-    stop("bon muss NULL oder numerisch sein.")
+  if(!is.null(bon)){
+    if(!is.numeric(bon)){
+      stop("bon muss NULL oder numerisch sein.")
+    }
+    if(bon != round(bon, digits=1)){
+      bon <- round(bon, digits=1)
+      message(paste0("bon vor Berechnung auf Genauigkeit der Ausgabe ",
+                     "(eine Nachkommastelle) gerundet: bon=", bon))
+    }
+  }
   bon_typ <- match.arg(bon_typ, c("relativ", "absolut"))
   methode <- match.arg(methode, c("funktional", "klassisch"))
 

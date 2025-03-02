@@ -20,8 +20,9 @@ Für vorhandene Arten siehe \code{\link[=et_liste]{et_liste()}}.}
 \item{alter}{Bestandesalter in Jahren als ganze Zahl (optional). Zwischen 5
 und max. zulässigem Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160).}
 
-\item{bon}{Ertragsklasse als Zahl (optional). Bei Methode \code{"klassisch"} im
-Interval [-2,4].}
+\item{bon}{Ertragsklasse als Zahl (optional). Wird vor der Berechnung auf die
+Genauigkeit der Ausgabe (eine Nachkommastelle) gerundet. Bei Methode
+\code{"klassisch"} im Interval [-2,4].}
 
 \item{bon_typ}{Die Bonität kann als relative Ertragsklasse (\code{"relativ"}) oder
 absolute Oberhöhenbonität (H100 im Alter 100, \code{"absolut"}) angegeben werden.
@@ -34,7 +35,9 @@ solange er eindeutig bleibt.}
 \value{
 Ein Dataframe mit den Spalten \code{Ekl}, \code{Alter},
 \code{N}, \code{Hg}, \code{H100}, \code{G}, \code{Dg}, \code{Dw}, \code{V}, \code{N_aus}, \code{G_aus}, \code{Dg_aus},
-\code{V_aus}, \code{iV}, \code{GWL}, \code{dGZ}.
+\code{V_aus}, \code{iV}, \code{GWL}, \code{dGZ}. Die Anzahlen \code{N} und \code{N_aus} werden auf
+ganze Zahlen und die übrigen Parameter auf eine Nachkommastelle gerundet
+ausgegeben.
 
 \tabular{ll}{
 \strong{Kürzel} \tab \strong{Beschreibung}\cr

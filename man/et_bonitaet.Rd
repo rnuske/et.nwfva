@@ -48,9 +48,9 @@ jeweilige Grenzwert. Ein Wahrheitswert.}
 Basis der Hossfeld-Funktion (s. Details).}
 }
 \value{
-Ein numerischer Vektor mit relativen oder absoluten Bonitäten,
-entsprechend Parameter \code{bon_typ}. Wenn Ertragsklassen gekappt wurden und
-\code{kapp_na == TRUE}, enthält der Vektor \code{NA}.
+Ein numerischer Vektor mit relativen oder absoluten Bonitäten
+gerundet auf eine Nachkommastelle, entsprechend Parameter \code{bon_typ}. Wenn
+Ertragsklassen gekappt wurden und \code{kapp_na == TRUE}, enthält der Vektor \code{NA}.
 }
 \description{
 Für eine gegebene Baumart und Höhe (Mittel- oder Oberhöhe) bei gegebenem Alter
@@ -75,7 +75,7 @@ Verfahren der linearen Extrapolation liegt darin, dass sie auch über den
 Bonitäts- und Altersrahmen der Ertragstafeln hinaus robuste und biologisch
 plausible Bestandeshöhen liefern. Daher unterscheiden sich die mit der
 Methode \code{"funktional"} ermittelten Bonitäten von den der Methode \code{"klassisch"}
-v.a. im Extrapolationsbereich der Ertragstafeln, d.h. bei
+vor allem. im Extrapolationsbereich der Ertragstafeln, d.h. bei
 Alter-Bestandeshöhen-Kombination, die durch die Ertragstafeln nicht abgedeckt
 sind.
 

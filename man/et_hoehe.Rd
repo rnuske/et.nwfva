@@ -19,7 +19,7 @@ et_hoehe(
 lateinischer Name oder in niedersächsischer Kodierung.
 Für vorhandene Arten siehe \code{\link[=et_liste]{et_liste()}}.}
 
-\item{alter}{Bestandesalter in Jahrenals ganze Zahl. Bei Methode \code{klassisch}
+\item{alter}{Bestandesalter in Jahren als ganze Zahl. Bei Methode \code{klassisch}
 zwischen 5 und max. zulässigem Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160).}
 
 \item{bon}{Bonität als Zahl. Zulässig sind relative Ertragsklassen im
@@ -45,10 +45,11 @@ eindeutig bleibt.}
 Basis der Hossfeld-Funktion (s. Details).}
 }
 \value{
-Numerischer Vektor mit Bestandeshöhen in Meter. Für Werte außerhalb
-des zulässigen Alters- und Bonitätsintervalls wird \code{NA} ausgegeben.
-Die klassische Methode kann für sehr junge Alter und schlechte Bonitäten
-zu negativen Bestandeshöhen führen, dann wird ebenfalls \code{NA} ausgegeben.
+Numerischer Vektor mit Bestandeshöhen in Meter gerundet auf eine
+Nachkommastelle. Für Werte außerhalb des zulässigen Alters- und
+Bonitätsintervalls wird \code{NA} ausgegeben. Die klassische Methode kann für
+sehr junge Alter und schlechte Bonitäten zu negativen Bestandeshöhen
+führen, dann wird ebenfalls \code{NA} ausgegeben.
 }
 \description{
 Für eine gegebene Baumart, Bonität und Alter wird die Bestandeshöhe als

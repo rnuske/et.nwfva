@@ -26,9 +26,10 @@ Dreisatz (\code{"klassisch"}). Parameter kann gekürzt werden, solange er
 eindeutig bleibt.}
 }
 \value{
-Numerischer Vektor mit gesuchten Bonitäten, je nach \code{richtung}
-entweder absolute Oberhöhenbonitäten oder relative Ertragsklassen. Für
-Werte außerhalb des zulässigen Bonitätsintervalls wird \code{NA} ausgegeben.
+Numerischer Vektor mit gesuchten Bonitäten gerundet auf eine
+Nachkommastelle, je nach \code{richtung} entweder absolute Oberhöhenbonitäten
+oder relative Ertragsklassen. Für Werte außerhalb des zulässigen
+Bonitätsintervalls wird \code{NA} ausgegeben.
 }
 \description{
 Bestimmt für eine gegebene Baumart und Ausgangs-Bonität die Ziel-Bonität als

@@ -53,7 +53,7 @@
 #' @param art Baumartenbezeichnung entweder als Kürzel, deutscher Name,
 #'   lateinischer Name oder in niedersächsischer Kodierung.
 #'   Für vorhandene Arten siehe [et_liste()].
-#' @param alter Bestandesalter in Jahrenals ganze Zahl. Bei Methode `klassisch`
+#' @param alter Bestandesalter in Jahren als ganze Zahl. Bei Methode `klassisch`
 #'   zwischen 5 und max. zulässigem Alter (Ei 220, Bu 180 und Fi, Dgl, Ki 160).
 #' @param bon Bonität als Zahl. Zulässig sind relative Ertragsklassen im
 #'   Interval \[-2,4\] bzw. \[-3,7\] bei Methode `"klassisch"` bzw.
@@ -73,10 +73,11 @@
 #' @param ... Weitere Parameter, wie z.B. für funkt. Bonitätsfächermodell auf
 #'   Basis der Hossfeld-Funktion (s. Details).
 #'
-#' @return Numerischer Vektor mit Bestandeshöhen in Meter. Für Werte außerhalb
-#'   des zulässigen Alters- und Bonitätsintervalls wird `NA` ausgegeben.
-#'   Die klassische Methode kann für sehr junge Alter und schlechte Bonitäten
-#'   zu negativen Bestandeshöhen führen, dann wird ebenfalls `NA` ausgegeben.
+#' @return Numerischer Vektor mit Bestandeshöhen in Meter gerundet auf eine
+#'   Nachkommastelle. Für Werte außerhalb des zulässigen Alters- und
+#'   Bonitätsintervalls wird `NA` ausgegeben. Die klassische Methode kann für
+#'   sehr junge Alter und schlechte Bonitäten zu negativen Bestandeshöhen
+#'   führen, dann wird ebenfalls `NA` ausgegeben.
 #'
 #' @author Robert Nuske (klassisch), Kai Staupendahl (funktional)
 #'

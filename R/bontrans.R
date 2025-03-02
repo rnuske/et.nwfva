@@ -32,9 +32,10 @@
 #'   Dreisatz (`"klassisch"`). Parameter kann gekürzt werden, solange er
 #'   eindeutig bleibt.
 #'
-#' @return Numerischer Vektor mit gesuchten Bonitäten, je nach `richtung`
-#'   entweder absolute Oberhöhenbonitäten oder relative Ertragsklassen. Für
-#'   Werte außerhalb des zulässigen Bonitätsintervalls wird `NA` ausgegeben.
+#' @return Numerischer Vektor mit gesuchten Bonitäten gerundet auf eine
+#'   Nachkommastelle, je nach `richtung` entweder absolute Oberhöhenbonitäten
+#'   oder relative Ertragsklassen. Für Werte außerhalb des zulässigen
+#'   Bonitätsintervalls wird `NA` ausgegeben.
 #'
 #' @author Robert Nuske (klassisch), Kai Staupendahl (funktional)
 #'

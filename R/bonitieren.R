@@ -30,7 +30,7 @@
 #' Bonitäts- und Altersrahmen der Ertragstafeln hinaus robuste und biologisch
 #' plausible Bestandeshöhen liefern. Daher unterscheiden sich die mit der
 #' Methode `"funktional"` ermittelten Bonitäten von den der Methode `"klassisch"`
-#' v.a. im Extrapolationsbereich der Ertragstafeln, d.h. bei
+#' vor allem. im Extrapolationsbereich der Ertragstafeln, d.h. bei
 #' Alter-Bestandeshöhen-Kombination, die durch die Ertragstafeln nicht abgedeckt
 #' sind.
 #'
@@ -67,9 +67,9 @@
 #' @param ... Weitere Parameter, wie z.B. für funkt. Bonitätsfächermodell auf
 #'   Basis der Hossfeld-Funktion (s. Details).
 #'
-#' @return Ein numerischer Vektor mit relativen oder absoluten Bonitäten,
-#'   entsprechend Parameter `bon_typ`. Wenn Ertragsklassen gekappt wurden und
-#'   `kapp_na == TRUE`, enthält der Vektor `NA`.
+#' @return Ein numerischer Vektor mit relativen oder absoluten Bonitäten
+#'   gerundet auf eine Nachkommastelle, entsprechend Parameter `bon_typ`. Wenn
+#'    Ertragsklassen gekappt wurden und `kapp_na == TRUE`, enthält der Vektor `NA`.
 #'
 #' @author Robert Nuske (klassisch), Kai Staupendahl (funktional)
 #'

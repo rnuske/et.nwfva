@@ -1,6 +1,6 @@
 
-# et.nwfva 0.1.1.901
-* Wechsel der Lizenz von GPL (>= 2) zu MIT
+# et.nwfva 0.2.0
+* Wechsel der Lizenz von GPL zu MIT, um Nutzung in proprietärer Software zu ermöglichen. Zustimmung der Ko-Autoren in Issue #1.
 * `NA` in Parametern von et_bonitaet() und et_hoehe() ermöglichen (Danke an Jan Schick für Pull Request)
 * Fix für Bonitäten genau zwischen zwei Ertragsklassen in et_tafel()
 * Eingabe von bon in et_tafel() wird vor der Berechnung auf Genauigkeit der Ausgabe (eine Nachkommastelle) gerundet, um konsistente Zeilen in der Ausgabe zu erreichen.
